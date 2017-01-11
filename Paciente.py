@@ -1627,7 +1627,7 @@ def OpcionesSinEspecialidades(driver):
     if site == 'hubsalud':
 
         if "cphW_ucespecialidades_div-ActualizarHistoriaMedica" in driver.page_source:
-            print "Testing Actualiza tu Historia Medica"
+            print " Testing Actualiza tu Historia Medica"
             scroll("cphW_ucespecialidades_div-ActualizarHistoriaMedica", driver)
             driver.find_element_by_id("cphW_ucespecialidades_div-ActualizarHistoriaMedica").click()
 
@@ -1638,13 +1638,13 @@ def OpcionesSinEspecialidades(driver):
             time.sleep(5)
 
             assert ("cphW_ucphr_ucResumenHistoriaMedica_Label1" in driver.page_source) , "Not on 'Historia Medica' page"
-            print "Testing Actualiza tu Histora Medica --> OK"
+            print " Testing Actualiza tu Histora Medica --> OK"
 
             driver.back()
             time.sleep(5)
 
         if "cphW_ucespecialidades_div-RegistrarDependientes" in driver.page_source:
-            print "Testing Registra a tus dependientes"
+            print " Testing Registra a tus dependientes"
 
             scroll("cphW_ucespecialidades_div-RegistrarDependientes", driver)
             driver.find_element_by_id("cphW_ucespecialidades_div-RegistrarDependientes").click()
@@ -1652,7 +1652,7 @@ def OpcionesSinEspecialidades(driver):
             time.sleep(5)
             assert("cphW_ucmicuenta_upListadoDependientePaciente" in driver.page_source), "Not on 'dependents' page"
 
-            print "Testing Registrar un dependiente"
+            print " Testing Registrar un dependiente"
             scroll("cphW_ucmicuenta_ctl47_btnRegistrarConyuge", driver)
             driver.find_element_by_id("cphW_ucmicuenta_ctl47_btnRegistrarConyuge").click()
             time.sleep(5)
@@ -1660,8 +1660,8 @@ def OpcionesSinEspecialidades(driver):
                 assert("Nombre" in driver.page_source and "Sexo" in driver.page_source), "Not on 'Crear Cónyuge' page"
             if lang == "english":
                 assert("Name" in driver.page_source and "Sex" in driver.page_source), "Not on 'Crear Conuge' page"
-            print "Testing Registrar un dependiente --> OK"
-            print "Testing Registra a tus dependientes --> OK"
+            print " Testing Registrar un dependiente --> OK"
+            print " Testing Registra a tus dependientes --> OK"
             driver.back()
             time.sleep(5)
 
@@ -1703,14 +1703,14 @@ def OpcionesSinEspecialidades(driver):
             '''
         if "cphW_ucespecialidades_div-ConsultarPrescripcionesContent" in driver.page_source:
 
-            print "Testing Consulta tus prescripciones recientes"
+            print " Testing Consulta tus prescripciones recientes"
 
             scroll("cphW_ucespecialidades_div-ConsultarPrescripcionesContent", driver)
             driver.find_element_by_id("cphW_ucespecialidades_div-ConsultarPrescripcionesContent").click()
             time.sleep(5)
 
             if u"Historias Médicas" in driver.page_source:
-                print "Testing Consulta tus prescripciones recientes --> OK"
+                print " Testing Consulta tus prescripciones recientes --> OK"
             else:
                 assert(False), "Not on persciption page"
 
@@ -1718,7 +1718,7 @@ def OpcionesSinEspecialidades(driver):
             time.sleep(5)
 
         if "cphW_ucespecialidades_opcionTituloVisitarBlog" in driver.page_source:
-            print "Testing Visite nuestro blog"
+            print " Testing Visite nuestro blog"
 
             scroll("cphW_ucespecialidades_opcionTituloVisitarBlog", driver)
             driver.find_element_by_id("cphW_ucespecialidades_opcionTituloVisitarBlog").click()
@@ -1726,9 +1726,9 @@ def OpcionesSinEspecialidades(driver):
 
             driver.switch_to_window(driver.window_handles[1])
             if driver.current_url == "http://www.mediconecta.com/blog-salud-en-linea/":
-                print "Testing Visite nuestro blog --> OK"
+                print " Testing Visite nuestro blog --> OK"
             else:
-                print "Did not go to Mediconecta Blog"
+                print " Did not go to Mediconecta Blog"
 
             driver.switch_to_window(driver.window_handles[1])
 
