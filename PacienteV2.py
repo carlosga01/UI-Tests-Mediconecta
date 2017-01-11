@@ -123,17 +123,17 @@ def main(argv):
             #Setear modulo
             if arg == 'Login' or arg == 'ForzarCache' or arg == 'Autentica' or arg == 'CitaODVSee' or arg == 'CitaODVSeeGeneral' or arg == 'CitaODTokbox' or arg == 'ProgramarCitaGeneral' or arg == 'CitaODTokboxEsp' or arg == 'ProgramarCitaEspecial':
                 modulo = arg
-            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO':
+            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada':
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp'
+                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada'
                 sys.exit()
 
             if ambiente != '':
                 if navegador == 'Chrome':
                     driver = webdriver.Chrome()
                     act_birthday = act_birthday_chrome
-                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp':
+                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada':
                         paciente = username_chrome
                     else:
                         paciente = username_chrome_vsee
@@ -141,7 +141,7 @@ def main(argv):
                 elif navegador == 'Firefox':
                     driver = webdriver.Firefox()
                     act_birthday = act_birthday_firefox
-                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp':
+                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada':
                         paciente = username_firefox
                     else:
                         paciente = username_firefox_vsee
@@ -149,7 +149,7 @@ def main(argv):
                 elif navegador == 'Ie':
                     driver = webdriver.Ie()
                     act_birthday = act_birthday_ie
-                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial'or modulo == 'CitaODTokboxEsp':
+                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaGeneral' or modulo == 'ProgramarCitaEspecial'or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada':
                         paciente = username_ie
                     else:
                         paciente = username_ie_vsee
@@ -424,6 +424,48 @@ def main(argv):
                     time.sleep(3)
                     driver.quit()
 
+                elif modulo == 'AtenderCitaProgramada':
+                    print "Autenticando paciente:" + paciente
+                    assert(log_in(paciente, password, driver, ambiente) == "exitoso") , "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Ir a la cita programada"
+                    atenderCitaProgramada(driver)
+                    print " Paciente esperando por el doctor"
+
+                    dr_driver = webdriver.Chrome()
+                    dr_driver.maximize_window()
+                    dr_driver.implicitly_wait(20)
+
+                    print "Autenticando doctor:" + dr_act_username_chrome
+                    assert (log_in_dr(dr_act_username_chrome, dr_password, dr_driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    time.sleep(5)
+
+                    print "Proceso: Atender Paciente Programado"
+                    #TO BE IMPLEMENTED
+                    AtenderPaciente(pacienteID, dr_driver)
+                    print " Cita --> OK"
+
+                    time.sleep(3)
+                    dr_driver.quit()
+
+                    print "Proceso: Llenando Encuesta"
+                    option = random.randint(1,5)
+                    FillEncuesta(driver, option)
+                    print " Encuesta llenada --> OK"
+                    time.sleep(3)
+                    driver.quit()
+
+                elif modulo == 'AppMisCitas':
+                    print "Autenticando paciente: " + paciente
+                    assert (log_in(paciente, password, driver, ambiente) == "exitoso") , "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Processo: Testing App Mis Citas"
+                    AppMisCitas(driver)
+                    print "App Mis Citas --> OK"
 
                 print "== Pruebas del paciente finalizadas =="
 
@@ -1349,9 +1391,74 @@ def citaODTokboxEsp(driver, especialista):
 
         print " Paciente esperando ser atendido"
 
+def atenderCitaProgramada(driver):
+    time.sleep(2)
+    misCitasButton = driver.find_element_by_xpath("//*[contains(concat( ' ', @class, ' ' ), concat( ' ', 'icon-MisCitas', ' ' ))]")
+    misCitasButton.click()
+    time.sleep(3)
+    assert ("Mis Citas" in driver.title), "Not in Mis Citas App"
+
+    irButton = driver.find_element_by_id("cphW_uclistadocita_rptTable_lnkCita_0")
+    irButton.click()
+    time.sleep(5)
+    assert ("Cita" in driver.title), "Paciente no entro en la sala de espera"
+
+def AppMisCitas(driver):
+    misCitasButton = driver.find_element_by_xpath("//*[contains(concat( ' ', @class, ' ' ), concat( ' ', 'icon-MisCitas', ' ' ))]")
+    misCitasButton.click()
+    time.sleep(2)
+    assert ("MisCitas" in driver.title), "Not in Mis Citas App"
+
+    print " Solicitar Cita Button Test.."
+    solicitarCitaButton = driver.find_element_by_id("cphW_uclistadocita_btnSolicitarCitaHub")
+    solicitarCitaButton.click()
+    time.sleep(2)
+    assert ("Hub" in driver.title), "Not redirected to Health Hub"
+    print " Solicitar Cita Button --> OK"
+
+    time.sleep(2)
+
+    misCitasButton = driver.find_element_by_xpath("//*[contains(concat( ' ', @class, ' ' ), concat( ' ', 'icon-MisCitas', ' ' ))]")
+    misCitasButton.click()
+    time.sleep(2)
+    assert ("MisCitas" in driver.title), "Not in Mis Citas App"
+
+    if "No hay citas registradas" not in driver.page_source:
+        print " Buscar No Results.."
+        buscar = driver.find_element_by_css_selector("#listado-Citas_filter .input-sm")
+        buscar.send_keys("wrongwrongwrong")
+
+        a = False
+        try:
+            driver.find_element_by_class_name("dataTables_empty")
+            a = True
+        except:
+            pass
+
+        assert (a), "The buscar input found something, even though it should not have"
+        print " Buscar No Results --> OK"
+
+        time.sleep(2)
+
+        print " Buscar Con Resultados.."
+        buscar = driver.find_element_by_css_selector("#listado-Citas_filter .input-sm")
+        buscar.clear()
+        buscar.send_keys("general")
+
+        a = False
+        try:
+            driver.find_element_by_class_name("dataTables_empty")
+            a = True
+        except:
+            pass
+
+        assert (not a), "The buscar input did not find any results when it should have"
+        print " Buscar Con Resultados --> OK"
+
+    else:
+        print "No hay citas registradas"
 
 
 start = time.time()
 main(sys.argv[1:])
-print "Execution Time:"
-print str(int((time.time() - start))) + " seconds"
+print "Execution Time: " + str(int((time.time() - start))) + " seconds"
