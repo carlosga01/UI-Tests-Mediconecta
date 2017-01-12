@@ -94,10 +94,10 @@ def main(argv):
 
         elif opt in ("-m", "--m"):
             #Setear modulo
-            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas':
+            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas' or arg == 'Pruebas_de_DPE':
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas'
+                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_DPE'
                 sys.exit()
 
 
@@ -208,6 +208,32 @@ def main(argv):
 
                     driver.quit()
                     p_driver.quit()
+
+                elif modulo == "Pruebas_de_DPE":
+                    p_driver = webdriver.Chrome()
+
+                    print "Autenticando paciente: Prueba Jenkins Chrome"
+                    assert (log_in_p("jenkins_chrome@mediconecta.com", "dba123", p_driver, ambiente)=="exitoso") , "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Cita OnDemand Tokbox"
+                    CitaODTokbox(p_driver, ambiente, "si")
+                    print "Paciente en sala de espera --> OK"
+
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    time.sleep(5)
+
+                    print "Proceso: Atender Paciente"
+                    Pruebas_de_DPE('a0HZ0000007gYqP', driver)
+
+                    print " Cita --> OK"
+                    time.sleep(3)
+                    p_driver.quit()
+                    driver.quit()
+
 
 
                 print "== Pruebas del doctor finalizadas =="
@@ -670,19 +696,157 @@ def historiaCitas(paciente, driver):
     verBtn.click()
     time.sleep(1)
 
+def Pruebas_de_DPE(paciente, driver):
+
+    if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
+        print " Seleccionando Paciente en Fila"
+        botonAtender = driver.execute_script("var trPaciente = document.getElementById('" + paciente + "'); return trPaciente.lastElementChild.lastElementChild;");
+        botonAtender.click()
+        time.sleep(5)
+    else:
+        print " No hay pacientes en Fila"
+        sys.exit(1)
+
+    time.sleep(5)
+    if "GUARDAR Y SALIR" in driver.page_source or "SAVE AND EXIT" in driver.page_source:
+        scroll("cphW_btnGuardarCita", driver)
+        driver.find_element_by_id("cphW_btnGuardarCita").click()
+
+        print " Llenando datos de la cita"
+        if "cphW_ucSoap_ucSubjective_txtMotivo" in driver.page_source:
+            print " Llenando motivo de cita"
+            scroll("cphW_ucSoap_ucSubjective_txtMotivo", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucSubjective_txtMotivo").send_keys("motivo automatizado jenkins")
+
+        if "cphW_ucSoap_ucSubjective_txtHistoria" in driver.page_source:
+            print " Llenando historia actual"
+            scroll("cphW_ucSoap_ucSubjective_txtHistoria", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucSubjective_txtHistoria").send_keys("historia actual automatizado jenkins")
+
+        if "cphW_ucSoap_ucSubjective_ddlEva" in driver.page_source:
+            print " Llenando dolor eva"
+            scroll("cphW_ucSoap_ucSubjective_ddlEva", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucSubjective_ddlEva").send_keys("1")
+
+        if "cphW_ucSoap_ucObjective_ddlClasificacionRiesgo" in driver.page_source:
+            print " Llenando casificacion de riesgo"
+            scroll("cphW_ucSoap_ucObjective_ddlClasificacionRiesgo", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucObjective_ddlClasificacionRiesgo").send_keys("Bajo")
+
+        if "cphW_ucSoap_ucObjective_ddlTipoConsulta" in driver.page_source:
+            print " Llenando tipo de consulta"
+            scroll("cphW_ucSoap_ucObjective_ddlTipoConsulta", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucObjective_ddlTipoConsulta").send_keys("Nueva consulta")
+
+        if "cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico" in driver.page_source:
+            print " Llenando informe medico"
+            scroll("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico").send_keys("informe medico automatizado jenkins")
+
+        if "cphW_ucSoap_ucAssesment_ctl00_btnCrear" in driver.page_source:
+            print "Agregar Diagnosticos"
+            scroll("cphW_ucSoap_ucAssesment_ctl00_btnCrear", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_btnCrear").click()
+            assert(u"Nuevo Diagnóstico" in driver.page_source or "New Diagnosis" in page_source), u"Not on the New Diagnosis page"
+
+            scroll("s2id_autogen3", driver)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen3']").click()
+            driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys("sarampion")
+            time.sleep(1)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys(Keys.ENTER)
+
+            scroll("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus").click()
+            driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus").send_keys("p")
+
+            scroll("cphW_ucSoap_ucAssesment_ctl00_btnCrearDiagnostico", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_btnCrearDiagnostico").click()
+
+            assert("SARAMPION" in driver.page_source), "Diagnosis did not save"
+
+            print "Agregar Diagnosticos --> OK"
+            time.sleep(5)
+
+        if "cphW_ucSoap_ucPlan_ctl00_btnCrear" in driver.page_source:
+            print "Agregar Prescripciones"
+            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrear", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrear").click()
+            assert(u"Nueva Prescripción" in driver.page_source or "New Prescription" in page_source), u"Not on the New Prescription page"
+
+            scroll("s2id_autogen11", driver)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys("escalol")
+            time.sleep(1)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
+
+            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
+            assert("ESCALOL" in driver.page_source), "Perscription did not save"
+
+            print "Agregar Prescripciones --> OK"
+            time.sleep(5)
+        if "cphW_ucSoap_ucPlan_ctl01_btnCrear" in driver.page_source:
+            print "Agregar Examenes"
+            scroll("cphW_ucSoap_ucPlan_ctl01_btnCrear", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl01_btnCrear").click()
+            assert(u"Nuevo Examen" in driver.page_source or "New Lab Test" in page_source), u"Not on the New Lab Test page"
+
+            scroll("cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre", driver)
+            driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").click()
+            driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").send_keys("TEST1")
+            driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").send_keys(Keys.ENTER)
+
+            scroll("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen").click()
+            assert("TEST1" in driver.page_source), "New lab test did not save"
+            print "Agregar Examenes --> OK"
+            time.sleep(5)
+
+        print " Guardando cita"
+        scroll("cphW_btnGuardarCita", driver)
+        driver.find_element_by_id("cphW_btnGuardarCita").click()
+        time.sleep(8)
+
+    if "Pudo atender al paciente" in driver.page_source:
+        print " Atencion del paciente exitosa"
+
+        try:
+            element = WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located((By.ID, "ButtonSi"))
+            )
+        except TimeoutException:
+            print 'No aparece el boton SI'
+            sys.exit(-1)
+            driver.quit()
+        #finally:
+
+        scroll("ButtonSi", driver)
+        driver.find_element_by_id("ButtonSi").click()
+        time.sleep(2)
 
 
+        if driver.find_element_by_id("cphW_btnContinuar"):
+        #if "cphW_btnContinuar" in driver.page_source:
+            scroll("cphW_btnContinuar", driver)
+            driver.find_element_by_id("cphW_btnContinuar").click()
+            time.sleep(5)
 
+            if "Resultado de la Cita" in driver.page_source:
+                print " Guardando resultado de la cita"
+                scroll("hab_ctl00$cphW$ctl02", driver)
+                driver.find_element_by_id("hab_ctl00$cphW$ctl02").click()
+                time.sleep(5)
+                scroll("cphW_btnGuardarCita", driver)
+                driver.find_element_by_id("cphW_btnGuardarCita").click()
+                time.sleep(5)
 
+            if "Ir a fila de paciente" in driver.page_source:
+                print " Redireccionando a Fila de Pacientes"
+                scroll("cphW_btnIrAfiladePaciente", driver)
+                driver.find_element_by_id("cphW_btnIrAfiladePaciente").click()
 
-
-
-
-
-
-
-
-
+        else:
+            print " Boton Continuar no encontrado"
 
 
 
