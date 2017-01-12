@@ -1543,11 +1543,13 @@ def atenderCitaProgramada(driver):
     misCitasButton.click()
     time.sleep(3)
     assert ("Mis Citas" in driver.title), "Not in Mis Citas App"
-
-    irButton = driver.find_element_by_id("cphW_uclistadocita_rptTable_lnkCita_0")
-    irButton.click()
-    time.sleep(5)
-    assert ("Cita" in driver.title), "Paciente no entro en la sala de espera"
+    if "cphW_uclistadocita_rptTable_lnkCita_0" in driver.page_source:
+        irButton = driver.find_element_by_id("cphW_uclistadocita_rptTable_lnkCita_0")
+        irButton.click()
+        time.sleep(5)
+        assert ("Cita" in driver.title), "Paciente no entro en la sala de espera"
+    else:
+        print "No current cita"
 
 def AppMisCitas(driver):
     misCitasButton = driver.find_element_by_xpath("//*[contains(concat( ' ', @class, ' ' ), concat( ' ', 'icon-MisCitas', ' ' ))]")
