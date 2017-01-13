@@ -234,8 +234,6 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
-
-
                 print "== Pruebas del doctor finalizadas =="
 
 
