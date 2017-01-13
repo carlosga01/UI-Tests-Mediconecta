@@ -1707,7 +1707,7 @@ def OpcionesSinEspecialidades(driver):
 
             scroll("cphW_ucespecialidades_div-ConsultarPrescripcionesContent", driver)
             driver.find_element_by_id("cphW_ucespecialidades_div-ConsultarPrescripcionesContent").click()
-            time.sleep(5)
+            time.sleep(7)
 
             if u"Historias Médicas" in driver.page_source:
                 print " Testing Consulta tus prescripciones recientes --> OK"
