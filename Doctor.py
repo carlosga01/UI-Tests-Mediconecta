@@ -224,7 +224,7 @@ def main(argv):
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
-                    time.sleep(5)
+                    time.sleep(6)
 
                     print "Proceso: Atender Paciente"
                     Pruebas_de_DPE('a0HZ0000007gYqP', driver)
@@ -240,13 +240,13 @@ def main(argv):
 
 def log_in(email, pw, driver, ambiente):
     driver.get("http://" + ambiente + ".mediconecta.com/LoginD")
-    time.sleep(3)
+    time.sleep(4)
 
     assert ("Portal Mediconecta" in driver.title), "Pagina no encontrada"
 
     driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
     driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
-    time.sleep(5)
+
 
     if "Terminos" in driver.current_url:
         scroll("cphW_btnAceptar", driver)
@@ -254,6 +254,7 @@ def log_in(email, pw, driver, ambiente):
         print " Aceptar Terminos --> OK"
         time.sleep(3)
 
+    time.sleep(8)
     if "filapacientes" in driver.current_url:
         return "exitoso"
     if "no ha sido activada" in driver.page_source:
@@ -706,11 +707,17 @@ def Pruebas_de_DPE(paciente, driver):
         sys.exit(1)
 
     time.sleep(5)
+    if "GUARDAR Y SALIR" not in driver.page_source and "SAVE AND EXIT" not in driver.page_source:
+        print "website not loaded yet"
+        time.sleep(9)
+
     if "GUARDAR Y SALIR" in driver.page_source or "SAVE AND EXIT" in driver.page_source:
         scroll("cphW_btnGuardarCita", driver)
         driver.find_element_by_id("cphW_btnGuardarCita").click()
 
         print " Llenando datos de la cita"
+        time.sleep(4)
+
         if "cphW_ucSoap_ucSubjective_txtMotivo" in driver.page_source:
             print " Llenando motivo de cita"
             scroll("cphW_ucSoap_ucSubjective_txtMotivo", driver)
