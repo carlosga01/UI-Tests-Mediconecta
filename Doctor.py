@@ -1009,19 +1009,26 @@ def Pruebas_de_Prescripciones(paciente, driver):
             scroll("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico", driver)
             driver.find_element_by_id("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico").send_keys("informe medico automatizado jenkins")
 
-        if "cphW_ucSoap_ucPlan_ctl00_btnCrear" in driver.page_source:
-            print "Agregar Prescripciones"
-            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrear", driver)
-            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrear").click()
-            assert(u"Nueva Prescripción" in driver.page_source or "New Prescription" in page_source), u"Not on the New Prescription page"
-
-
-
+        if "s2id_autogen5" in driver.page_source:
             scroll("s2id_autogen5", driver)
             driver.find_element_by_xpath("//*[@id='s2id_autogen5']").click()
             driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys("escalol")
             time.sleep(1)
             driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys(Keys.ENTER)
+
+
+            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
+            assert("ESCALOL" in driver.page_source), "Perscription did not save"
+
+            print "Agregar Prescripciones --> OK"
+            time.sleep(5)
+        elif "s2id_autogen11" in driver.page_source:
+            scroll("s2id_autogen11", driver)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys("escalol")
+            time.sleep(1)
+            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
 
 
             scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
@@ -1392,8 +1399,6 @@ def AtenderPacienteConDPE(paciente, driver):
 
         else:
             print " Boton Continuar no encontrado"
-
-
 
 start = time.time()
 main(sys.argv[1:])
