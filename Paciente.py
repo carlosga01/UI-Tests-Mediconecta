@@ -345,13 +345,7 @@ def main(argv):
                     dr_driver.quit()
 
                     print "Proceso: Llenando Encuesta"
-                    hay_encuesta = True
-                    while hay_encuesta == True:
-                        time.sleep(5)
-                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
-                            FillEncuesta(driver)
-                        else:
-                            hay_encuesta = False
+                    FillEncuesta(driver)
 
                     print " Encuesta llenada --> OK"
 
@@ -423,13 +417,7 @@ def main(argv):
 
                     print "Proceso: Llenando Encuesta"
 
-                    hay_encuesta = True
-                    while hay_encuesta == True:
-                        time.sleep(5)
-                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
-                            FillEncuesta(driver)
-                        else:
-                            hay_encuesta = False
+                    FillEncuesta(driver)
                     print " Encuesta llenada --> OK"
 
                     time.sleep(3)
@@ -463,13 +451,7 @@ def main(argv):
                     dr_driver.quit()
 
                     print "Proceso: Llenando Encuesta"
-                    hay_encuesta = True
-                    while hay_encuesta == True:
-                        time.sleep(5)
-                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
-                            FillEncuesta(driver)
-                        else:
-                            hay_encuesta = False
+                    FillEncuesta(driver)
                     print " Encuesta llenada --> OK"
                     time.sleep(3)
                     driver.quit()
@@ -1282,40 +1264,48 @@ def AtenderPaciente(paciente, driver):
 
 def FillEncuesta(driver):
     time.sleep(5)
-
+    hay_encuesta = True
     assert ('cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source), "No se encontraron los botones para la encuesta"
-    if u"Qué le pareció la consulta" in driver.page_source:
-        option = random.randint(1,5)
-        if option == 5:
-            print " Seleccion: Me Gusto Mucho"
-            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_0').click()
-        elif option == 4:
-            print " Seleccion: Me Gusto"
-            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_1').click()
-        elif option == 3:
-            print " Seleccion: Normal"
-            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_2').click()
-        elif option == 2:
-            print " Seleccion: No Me Gusto"
-            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_3').click()
-        elif option == 1:
-            print " Seleccion: No Me Gusto Nada"
-            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_4').click()
-    else:
-        current_num = 0
-        for i in range(1000):
-            temp_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(i)
-            if temp_id in driver.page_source:
-                current_num = i
+
+    while hay_encuesta == True:
+        time.sleep(5)
+        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
+            if u"Qué le pareció la consulta" in driver.page_source:
+                option = random.randint(1,5)
+                if option == 5:
+                    print " Seleccion: Me Gusto Mucho"
+                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_0').click()
+                elif option == 4:
+                    print " Seleccion: Me Gusto"
+                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_1').click()
+                elif option == 3:
+                    print " Seleccion: Normal"
+                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_2').click()
+                elif option == 2:
+                    print " Seleccion: No Me Gusto"
+                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_3').click()
+                elif option == 1:
+                    print " Seleccion: No Me Gusto Nada"
+                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_4').click()
             else:
-                break
-        option = random.randint(0,current_num)
-        new_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(option)
-        driver.find_element_by_id(new_id).click()
+                current_num = 0
+                for i in range(1000):
+                    temp_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(i)
+                    if temp_id in driver.page_source:
+                        current_num = i
+                    else:
+                        break
+                option = random.randint(0,current_num)
+                new_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(option)
+                driver.find_element_by_id(new_id).click()
 
 
-    time.sleep(2)
-    driver.find_element_by_id('cphW_btnFinalizar').click()
+            time.sleep(4)
+            if "cphW_btnFinalizar" in driver.page_source:
+                driver.find_element_by_id('cphW_btnFinalizar').click()
+        else:
+            hay_encuesta = False
+
 
 def programarCitaGeneral(driver):
     time.sleep(3)
