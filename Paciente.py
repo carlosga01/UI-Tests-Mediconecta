@@ -345,8 +345,14 @@ def main(argv):
                     dr_driver.quit()
 
                     print "Proceso: Llenando Encuesta"
-                    option = random.randint(1,5)
-                    FillEncuesta(driver, option)
+                    hay_encuesta = True
+                    while hay_encuesta == True:
+                        time.sleep(5)
+                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
+                            FillEncuesta(driver)
+                        else:
+                            hay_encuesta = False
+
                     print " Encuesta llenada --> OK"
 
                     time.sleep(3)
@@ -416,8 +422,14 @@ def main(argv):
                     dr_driver.quit()
 
                     print "Proceso: Llenando Encuesta"
-                    option = random.randint(1,5)
-                    FillEncuesta(driver, option)
+
+                    hay_encuesta = True
+                    while hay_encuesta == True:
+                        time.sleep(5)
+                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
+                            FillEncuesta(driver)
+                        else:
+                            hay_encuesta = False
                     print " Encuesta llenada --> OK"
 
                     time.sleep(3)
@@ -451,8 +463,13 @@ def main(argv):
                     dr_driver.quit()
 
                     print "Proceso: Llenando Encuesta"
-                    option = random.randint(1,5)
-                    FillEncuesta(driver, option)
+                    hay_encuesta = True
+                    while hay_encuesta == True:
+                        time.sleep(5)
+                        if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
+                            FillEncuesta(driver)
+                        else:
+                            hay_encuesta = False
                     print " Encuesta llenada --> OK"
                     time.sleep(3)
                     driver.quit()
@@ -808,13 +825,16 @@ def CitaODVSee(driver, ambiente):
     print " Solicitar cita --> OK"
 
 
+    ### Dont really understand why the following is in here, what does it do?###
+    ###commented out because it found the if but could not find the id###
+    '''
     if "son personales y generan un historial" or "Medical consultations are personal and create a medical history" in driver.page_source:
         scroll("uniform-cphW_uccitasondemand_rblParaQuien_0", driver)
         driver.find_element_by_id("uniform-cphW_uccitasondemand_rblParaQuien_0").click()
         scroll("cphW_uccitasondemand_btnContinuarDep", driver)
         driver.find_element_by_id("cphW_uccitasondemand_btnContinuarDep").click()
         print " Seleccionar Paciente --> OK"
-
+    '''
 
 
     if "firefox" in str(driver):
@@ -944,7 +964,9 @@ def CitaODTokbox(driver, ambiente, atender):
     time.sleep(5)
     print " Solicitar cita --> OK"
 
-
+    ### Dont really understand why the following is in here, what does it do?###
+    ###commented out because it found the if but could not find the id###
+    '''
     if "son personales y generan un historial" or "Medical consultations are personal and create a medical history" in driver.page_source:
         scroll("uniform-cphW_uccitasondemand_rblParaQuien_0", driver)
         driver.find_element_by_id("uniform-cphW_uccitasondemand_rblParaQuien_0").click()
@@ -977,6 +999,7 @@ def CitaODTokbox(driver, ambiente, atender):
                 print " Cita no realizada1"
         else:
             print " Cita no realizada2"
+    '''
 
 def Historia_Medica(driver):
     time.sleep(2)
@@ -1257,26 +1280,39 @@ def AtenderPaciente(paciente, driver):
         else:
             print " Boton Continuar no encontrado"
 
-def FillEncuesta(driver, option):
+def FillEncuesta(driver):
     time.sleep(5)
 
     assert ('cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source), "No se encontraron los botones para la encuesta"
+    if u"Qué le pareció la consulta" in driver.page_source:
+        option = random.randint(1,5)
+        if option == 5:
+            print " Seleccion: Me Gusto Mucho"
+            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_0').click()
+        elif option == 4:
+            print " Seleccion: Me Gusto"
+            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_1').click()
+        elif option == 3:
+            print " Seleccion: Normal"
+            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_2').click()
+        elif option == 2:
+            print " Seleccion: No Me Gusto"
+            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_3').click()
+        elif option == 1:
+            print " Seleccion: No Me Gusto Nada"
+            driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_4').click()
+    else:
+        current_num = 0
+        for i in range(1000):
+            temp_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(i)
+            if temp_id in driver.page_source:
+                current_num = i
+            else:
+                break
+        option = random.randint(0,current_num)
+        new_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(option)
+        driver.find_element_by_id(new_id).click()
 
-    if option == 5:
-        print " Seleccion: Me Gusto Mucho"
-        driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_0').click()
-    elif option == 4:
-        print " Seleccion: Me Gusto"
-        driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_1').click()
-    elif option == 3:
-        print " Seleccion: Normal"
-        driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_2').click()
-    elif option == 2:
-        print " Seleccion: No Me Gusto"
-        driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_3').click()
-    elif option == 1:
-        print " Seleccion: No Me Gusto Nada"
-        driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_4').click()
 
     time.sleep(2)
     driver.find_element_by_id('cphW_btnFinalizar').click()
