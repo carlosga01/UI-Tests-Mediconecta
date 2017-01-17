@@ -780,8 +780,6 @@ def historiaCitas(paciente, driver):
     driver.save_screenshot("before.jpg")
     verBtn = driver.find_element_by_css_selector("#cphW_ucHistoriaMedicaDoctor_ctl11_rptTable_btnVer_41 > i")
     verBtn.click()
-    time.sleep(1)
-    driver.save_screenshot("middle.jpg")
     time.sleep(5)
     driver.save_screenshot("after.jpg")
 
@@ -794,20 +792,14 @@ def historiaCitas(paciente, driver):
     baseline_num = baseline.max()
     new_num = compare.max()
     '''
+    
     before = Image.open('before.jpg')
     after = Image.open('after.jpg')
-    middle = Image.open('middle.jpg')
     if list(before.getdata()) == list(after.getdata()):
         assert(False), "Did not go to the right page"
     else:
         pass
 
-    print "TEST"
-    if list(before.getdata()) == list(middle.getdata()):
-        print "does not detect difference"
-    if list(before.getdata()) == list(before.getdata()):
-        print "it detects the two as the same thing, good"
-    print list(before.getdata())
     time.sleep(2)
 
 def convert(img_name):
