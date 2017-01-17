@@ -162,7 +162,6 @@ def main(argv):
 
                 print "Comenzando Pruebas: " + ambiente + " en " + navegador
 
-
                 if modulo == 'ForzarCache':
                     print "Proceso: ForzandoCache"
                     forzar_cache(driver, ambiente)
@@ -1752,7 +1751,7 @@ def OpcionesSinEspecialidades(driver):
             else:
                 print " Did not go to Mediconecta Blog"
 
-            driver.switch_to_window(driver.window_handles[1])
+            driver.switch_to_window(driver.window_handles[0])
 
         if count == 0:
             print "No hay opciones"
