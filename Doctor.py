@@ -47,7 +47,6 @@ def main(argv):
     IDPacienteProdFirefox = 'a0HU000000M21DL'   #Pruebas Jenkins Firefox
     IDPacienteProdIE = 'a0HU000000M21Du'   #Pruebas Jenkins IE
 
-
     try:
       opts, args = getopt.getopt(argv,"d:a:m:")
     except getopt.GetoptError:
@@ -91,7 +90,6 @@ def main(argv):
                 print 'valores esperados: -a portaldev / testprod / consultas'
                 sys.exit()
 
-
         elif opt in ("-m", "--m"):
             #Setear modulo
             if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas':
@@ -101,7 +99,6 @@ def main(argv):
             else:
                 print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE'
                 sys.exit()
-
 
             if ambiente != '':
                 if navegador == 'Chrome':
@@ -119,7 +116,6 @@ def main(argv):
                     doctor = act_username_ie
                     act_birthday = act_birthday_ie
 
-
                 ## COMIENZAN LAS PRUEBAS
                 #driver.set_window_size(800,600)
                 driver.maximize_window()
@@ -127,7 +123,6 @@ def main(argv):
                 #driver.get("http://" + ambiente + ".mediconecta.com/LoginD")
 
                 print "Comenzando Pruebas: " + ambiente + " en " + navegador
-
 
                 if modulo == 'Autentica':
                     print "Proceso: Solo validar autenticacion correcta"
@@ -210,31 +205,6 @@ def main(argv):
 
                     driver.quit()
                     p_driver.quit()
-
-                elif modulo == "Pruebas_de_DPE":
-                    p_driver = webdriver.Chrome()
-
-                    print "Autenticando paciente: Prueba Jenkins Chrome"
-                    assert (log_in_p("jenkins_chrome@mediconecta.com", "dba123", p_driver, ambiente)=="exitoso") , "With correct login: Autenticacion fallida"
-                    print " Autenticacion --> OK"
-
-                    print "Proceso: Cita OnDemand Tokbox"
-                    CitaODTokbox(p_driver, ambiente, "si")
-                    print "Paciente en sala de espera --> OK"
-
-                    print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
-                    print " Autenticacion --> OK"
-
-                    time.sleep(6)
-
-                    print "Proceso: Atender Paciente"
-                    Pruebas_de_DPE('a0HZ0000007gYqP', driver)
-
-                    print " Cita --> OK"
-                    time.sleep(3)
-                    p_driver.quit()
-                    driver.quit()
 
                 elif modulo == "Pruebas_de_Diagnostico":
                     p_driver = webdriver.Chrome()
@@ -335,7 +305,6 @@ def main(argv):
                     time.sleep(3)
                     p_driver.quit()
                     driver.quit()
-
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -825,14 +794,6 @@ def historiaCitas(paciente, driver):
 
     time.sleep(2)
 
-def convert(img_name):
-        # get JPG image as Scipy array, RGB (3 layer)
-        data = imread(str(img_name))
-        # convert to grey-scale using W3C luminance calc
-        data = sp.inner(data, [299, 587, 114]) / 1000.0
-        # normalize per http://en.wikipedia.org/wiki/Cross-correlation
-        return (data - data.mean()) / data.std()
-
 def Pruebas_de_Diagnostico(paciente, driver):
 
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
@@ -1286,13 +1247,6 @@ def Examenes(driver):
         print "No 'Examenes' button found"
 
 def AtenderPacienteConDPE(paciente, driver):
-    #if "Fila de Pacientes" in driver.page_source:
-    #    driver.find_element_by_link_text("Fila de Pacientes").click()
-    #else:
-    #    driver.find_element_by_link_text("Patient Queue").click()
-    #time.sleep(3)
-
-
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
         print " Seleccionando Paciente en Fila"
         botonAtender = driver.execute_script("var trPaciente = document.getElementById('" + paciente + "'); return trPaciente.lastElementChild.lastElementChild;");
@@ -1300,17 +1254,6 @@ def AtenderPacienteConDPE(paciente, driver):
     else:
         print " No hay pacientes en Fila"
         sys.exit(1)
-
-    #print " Llenando historia medica"
-    #Historia_Medica_Dr(driver)
-    #print "Proceso PHR --> OK"
-
-    #if "cphW_ucSoap_ucAssesment_ctl00_btnCrear" in driver.page_source:
-    #        diagnostico = ["citaTab", "cphW_ucSoap_ucAssesment_ctl00_btnCrear", "s2id_cphW_ucSoap_ucAssesment_ctl00_ucCreate_txtDiagnostico", "cphW_ucSoap_ucAssesment_ctl00_btnCrearDiagnostico", ["cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus"]]
-    #        #list_to_eliminate = ["cphW_ucHistoriaMedicaDoctor_ctl03_rptTable_btnEliminar_0", "cphW_ucHistoriaMedicaDoctor_ctl03_btnEliminarModal"]
-    #        testing_different_inputs(diagnostico, 'CEFALEA', '', None, "Definitive", driver)
-    #        print " diagnostico --> OK"
-
 
     if "GUARDAR Y SALIR" in driver.page_source:
         scroll("cphW_btnGuardarCita", driver)
@@ -1361,7 +1304,6 @@ def AtenderPacienteConDPE(paciente, driver):
     if "Pudo atender al paciente" in driver.page_source:
         print " Atencion del paciente exitosa"
 
-
         try:
             element = WebDriverWait(driver, 15).until(
                 EC.presence_of_element_located((By.ID, "ButtonSi"))
@@ -1370,15 +1312,12 @@ def AtenderPacienteConDPE(paciente, driver):
             print 'No aparece el boton SI'
             sys.exit(-1)
             driver.quit()
-        #finally:
 
         scroll("ButtonSi", driver)
         driver.find_element_by_id("ButtonSi").click()
         time.sleep(2)
 
-
         if driver.find_element_by_id("cphW_btnContinuar"):
-        #if "cphW_btnContinuar" in driver.page_source:
             scroll("cphW_btnContinuar", driver)
             driver.find_element_by_id("cphW_btnContinuar").click()
             time.sleep(5)
