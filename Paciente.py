@@ -806,18 +806,12 @@ def CitaODVSee(driver, ambiente):
     time.sleep(5)
     print " Solicitar cita --> OK"
 
-
-    ### Dont really understand why the following is in here, what does it do?###
-    ###commented out because it found the if but could not find the id###
-    '''
     if "son personales y generan un historial" or "Medical consultations are personal and create a medical history" in driver.page_source:
         scroll("uniform-cphW_uccitasondemand_rblParaQuien_0", driver)
         driver.find_element_by_id("uniform-cphW_uccitasondemand_rblParaQuien_0").click()
         scroll("cphW_uccitasondemand_btnContinuarDep", driver)
         driver.find_element_by_id("cphW_uccitasondemand_btnContinuarDep").click()
         print " Seleccionar Paciente --> OK"
-    '''
-
 
     if "firefox" in str(driver):
         if "Para continuar por favor instala nuestra" in driver.page_source:
@@ -1306,7 +1300,6 @@ def FillEncuesta(driver):
         else:
             hay_encuesta = False
 
-
 def programarCitaGeneral(driver):
     time.sleep(3)
     site = 'portal'
@@ -1651,8 +1644,9 @@ def OpcionesSinEspecialidades(driver):
 
 
     if site == 'hubsalud':
-
+        count = 0
         if "cphW_ucespecialidades_div-ActualizarHistoriaMedica" in driver.page_source:
+            count += 1
             print " Testing Actualiza tu Historia Medica"
             scroll("cphW_ucespecialidades_div-ActualizarHistoriaMedica", driver)
             driver.find_element_by_id("cphW_ucespecialidades_div-ActualizarHistoriaMedica").click()
@@ -1670,6 +1664,7 @@ def OpcionesSinEspecialidades(driver):
             time.sleep(5)
 
         if "cphW_ucespecialidades_div-RegistrarDependientes" in driver.page_source:
+            count += 1
             print " Testing Registra a tus dependientes"
 
             scroll("cphW_ucespecialidades_div-RegistrarDependientes", driver)
@@ -1728,7 +1723,7 @@ def OpcionesSinEspecialidades(driver):
             driver.find_element_by_id("cphW_ucmicuenta_ctl47_ucCRU_ucDatos_txtTelefonoCelular").send_keys("12345678")
             '''
         if "cphW_ucespecialidades_div-ConsultarPrescripcionesContent" in driver.page_source:
-
+            count += 1
             print " Testing Consulta tus prescripciones recientes"
 
             scroll("cphW_ucespecialidades_div-ConsultarPrescripcionesContent", driver)
@@ -1744,6 +1739,7 @@ def OpcionesSinEspecialidades(driver):
             time.sleep(5)
 
         if "cphW_ucespecialidades_opcionTituloVisitarBlog" in driver.page_source:
+            count += 1
             print " Testing Visite nuestro blog"
 
             scroll("cphW_ucespecialidades_opcionTituloVisitarBlog", driver)
@@ -1758,9 +1754,12 @@ def OpcionesSinEspecialidades(driver):
 
             driver.switch_to_window(driver.window_handles[1])
 
-
+        if count == 0:
+            print "No hay opciones"
     else:
         print "Not in hubsalud"
+
+
 
 
 start = time.time()
