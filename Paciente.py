@@ -122,10 +122,10 @@ def main(argv):
             #Setear modulo
             if arg == 'Login' or arg == 'ForzarCache' or arg == 'Autentica' or arg == 'CitaODVSee' or arg == 'CitaODVSeeGeneral' or arg == 'CitaODTokbox' or arg == 'ProgramarCitaGeneral' or arg == 'CitaODTokboxEsp' or arg == 'ProgramarCitaEspecial':
                 modulo = arg
-            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada' or arg == 'OpcionesSinEspecialidades':
+            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada' or arg == 'OpcionesSinEspecialidades' or arg == 'SecretariaProgramarCita':
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades'
+                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades/SecretariaProgramarCita'
                 sys.exit()
 
             if ambiente != '':
@@ -474,6 +474,19 @@ def main(argv):
                     print "Opciones Sin Especialidades --> OK"
 
                     driver.quit()
+
+                elif modulo == 'SecretariaProgramarCita':
+                    email = "secretaria4@mediconecta.com"
+                    pw = "dba123"
+                    ambiente = "portaldev"
+
+                    print "Autenticando secretaria: " + email
+                    log_in_dr(email, pw, driver, ambiente)
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Programado una cita como secretaria"
+                    secretariaProgramarCita(driver)
+                    print "Programacion --> OK"
 
 
                 print "== Pruebas del paciente finalizadas =="
@@ -1721,6 +1734,7 @@ def OpcionesSinEspecialidades(driver):
             scroll("cphW_ucmicuenta_ctl47_ucCRU_ucDatos_txtTelefonoCelular", driver)
             driver.find_element_by_id("cphW_ucmicuenta_ctl47_ucCRU_ucDatos_txtTelefonoCelular").send_keys("12345678")
             '''
+
         if "cphW_ucespecialidades_div-ConsultarPrescripcionesContent" in driver.page_source:
             count += 1
             print " Testing Consulta tus prescripciones recientes"
@@ -1757,6 +1771,62 @@ def OpcionesSinEspecialidades(driver):
             print "No hay opciones"
     else:
         print "Not in hubsalud"
+
+def secretariaProgramarCita(driver):
+
+    time.sleep(3)
+    assert (("Scheduled Visits" in driver.title) or ("Citas Programadas" in driver.title)), "No en pagina de Citas Programadas"
+
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_btnProgramarCita").click()
+
+    if "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios" in driver.page_source:
+        consultorios = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios")]')
+        all_options = consultorios.find_elements_by_tag_name("option")
+        print " Selecting: Test Consult VE"
+        for option in all_options:
+            if option.get_attribute("value") == "001Z000000VEOKDIA5":
+                option.click()
+                break
+
+    time.sleep(5)
+    d = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores")]')
+    al_options = d.find_elements_by_tag_name("option")
+    print " Selecting: Demo AS doctor"
+    for option in al_options:
+        if option.get_attribute("value") == "003Z000001LIAF5IAP":
+            option.click()
+            break
+
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_btnContinuarEscogerConsulDoc").click()
+
+    time.sleep(5)
+    print " Selecting menor de edad"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_btnconfirmarMenor_No").click()
+
+    time.sleep(3)
+    print " Searching for patient"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda").send_keys("jenkins_chrome@mediconecta.com" + Keys.RETURN)
+
+    time.sleep(2)
+    assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0" in driver.page_source), "No results"
+
+    print " Selecting patient"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0").click()
+    time.sleep(3)
+
+    print " Setting date"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys("01/12/2017")
+
+    print " Setting time"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys("11:15 AM")
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
+
+    print " Programando cita"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
+
+    time.sleep(3)
+    assert(("Scheduled Visits" in driver.title) or ("Citas Programadas" in driver.title)), "No en pagina de Citas Programadas"
+
 
 
 
