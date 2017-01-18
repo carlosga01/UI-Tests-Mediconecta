@@ -13,7 +13,6 @@ import time, unicodedata, sys, getopt
 #pip install Pillow
 import PIL
 from PIL import Image
-
 from datetime import datetime
 
 def main(argv):
@@ -97,10 +96,10 @@ def main(argv):
             #Setear modulo
             if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas':
                 modulo = arg
-            elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "DoctorProgramarCita" or arg == "DoctorProgramarCitaMinor":
+            elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor":
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/DoctorProgramarCita'
+                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen'
                 sys.exit()
 
             if ambiente != '':
@@ -309,7 +308,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
-                elif modulo == "DoctorProgramarCita":
+                elif modulo == "ProgramarCitaGalen":
                     print "Autenticando doctor: " + doctor
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
@@ -319,7 +318,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
-                elif modulo == "DoctorProgramarCitaMinor":
+                elif modulo == "ProgramarCitaGalenMinor":
                     print "Autenticando doctor: " + doctor
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
@@ -1193,7 +1192,7 @@ def Diagnostico(driver):
 
         scroll("s2id_autogen3", driver)
         driver.find_element_by_xpath("//*[@id='s2id_autogen3']").click()
-        driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys("sarampion")
+        driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys("sarampionf")
         time.sleep(1)
         driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys(Keys.ENTER)
 
@@ -1460,6 +1459,7 @@ def DoctorProgramarCita(driver):
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
             time.sleep(5)
         assert ("cphW_uccitasprogramadasdr_btnProgramarCita" in driver.page_source), "Cita no completada"
+
 def DoctorProgramarCitaMinor(driver):
     time.sleep(5)
     if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -1585,6 +1585,7 @@ def DoctorProgramarCitaMinor(driver):
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
             time.sleep(5)
         assert ("cphW_uccitasprogramadasdr_btnProgramarCita" in driver.page_source), "Cita no completada"
+
 
 start = time.time()
 main(sys.argv[1:])
