@@ -94,12 +94,12 @@ def main(argv):
 
         elif opt in ("-m", "--m"):
             #Setear modulo
-            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas':
+            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas' or arg == "AppHistoriasClientes":
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor":
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen'
+                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/AppHistoriasClientes'
                 sys.exit()
 
             if ambiente != '':
@@ -327,6 +327,43 @@ def main(argv):
                     DoctorProgramarCitaMinor(driver)
                     print " Cita --> OK"
                     driver.quit
+
+                elif modulo == "AppHistoriasClientes":
+                    p_driver = webdriver.Chrome()
+
+                    print "Autenticando paciente: Prueba Jenkins Chrome"
+                    assert (log_in_p("jenkins_chrome@mediconecta.com", "dba123", p_driver, ambiente)=="exitoso") , "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Cita OnDemand Tokbox"
+                    CitaODTokbox(p_driver, ambiente, "si")
+                    print "Paciente en sala de espera --> OK"
+
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    time.sleep(6)
+
+                    print "Proceso: App Historias Clientes"
+                    screenshot(driver, "before_cita.jpg")
+                    p_driver.find_element_by_id("cphW_ucCita_btnCitaFinalizarPpal").click()
+                    time.sleep(2)
+                    p_driver.find_element_by_id("cphW_ucCita_btnAceptarFinalizar").click()
+                    time.sleep(2)
+                    screenshot(driver, "after_cita.jpg")
+
+                    before = Image.open('before_cita.jpg')
+                    after = Image.open('after_cita.jpg')
+                    if list(before.getdata()) == list(after.getdata()):
+                        assert(False), "Did register the cita"
+                    else:
+                        print "Cita was registered"
+
+                    print " Cita --> OK"
+                    time.sleep(3)
+                    p_driver.quit()
+                    driver.quit()
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -1703,6 +1740,15 @@ def DoctorProgramarCitaMinor(driver):
             phrase = venezuela_time + ":" + str(minuto) + " - Cita con Pruebas Jenkins Jr Chrome Jr Tokbox"
             assert (phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
+
+def screenshot(driver, file_name):
+    assert ("cphW_ucPacientesEnFila_btnSolicitarCitaHub" in driver.page_source), "Not on right page"
+    scroll("cphW_ucPacientesEnFila_btnSolicitarCitaHub", driver)
+    driver.find_element_by_id("cphW_ucPacientesEnFila_btnSolicitarCitaHub").click()
+    time.sleep(4)
+    driver.save_screenshot(file_name)
+    time.sleep(1)
+    driver.find_elements_by_tag_name("button")[-1].click()
 
 
 start = time.time()
