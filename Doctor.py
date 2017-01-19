@@ -1494,6 +1494,8 @@ def DoctorProgramarCita(driver):
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
         time.sleep(1)
 
+        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
+
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(hour +':'+ minuto + " " + time_of_day)
@@ -1501,12 +1503,16 @@ def DoctorProgramarCita(driver):
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
         time.sleep(1)
 
+        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
+
         if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").click()
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys(Keys.BACKSPACE + Keys.BACKSPACE)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys("1")
             time.sleep(1)
+
+        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
 
         if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas" in driver.page_source:
             element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas']")
@@ -1524,6 +1530,9 @@ def DoctorProgramarCita(driver):
                     print "Pay in VEF"
                     break
         assert(currency != None), "No currency found"
+
+        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
+
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
         time.sleep(5)
@@ -1671,13 +1680,15 @@ def DoctorProgramarCitaMinor(driver):
                     time_of_day = "PM"
             if time_of_day == "PM":
                 venezuela_time = str(int(venezuela_time) + 12)
-            print hour, ":", minuto
-            print "vt", venezuela_time
+
+
             assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha" in driver.page_source), "Did not go to the right page"
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
             time.sleep(1)
+
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
 
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
@@ -1686,12 +1697,16 @@ def DoctorProgramarCitaMinor(driver):
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
             time.sleep(1)
 
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
+
             if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
                 scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta", driver)
                 driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").click()
                 driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys(Keys.BACKSPACE + Keys.BACKSPACE)
                 driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys("1")
                 time.sleep(1)
+
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
 
             if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas" in driver.page_source:
                 element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas']")
@@ -1708,6 +1723,9 @@ def DoctorProgramarCitaMinor(driver):
                         currency = "VEF"
                         print "Pay in VEF"
                         break
+
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_lblTitulo").click()
+
             assert(currency != None), "No currency found"
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
