@@ -17,7 +17,6 @@ from selenium.webdriver.chrome.options import Options
 #from selenium.webdriver.common.alert import Alert
 import unicodedata, sys, getopt, time
 import random
-from datetime import datetime
 
 def main(argv):
     driver = ''
@@ -121,12 +120,12 @@ def main(argv):
 
         elif opt in ("-m", "--m"):
             #Setear modulo
-            if arg == 'Login' or arg == 'ForzarCache' or arg == 'Autentica' or arg == 'CitaODVSee' or arg == 'CitaODVSeeGeneral' or arg == 'CitaODTokbox' or arg == 'ProgramarCitaGeneral' or arg == 'CitaODTokboxEsp' or arg == 'ProgramarCitaEspecial':
+            if arg == 'Login' or arg == 'ForzarCache' or arg == 'Autentica' or arg == 'CitaODVSee' or arg == 'CitaODVSeeGeneral' or arg == 'CitaODTokbox' or arg == 'ProgramarCitaGeneral' or arg == 'CitaODTokboxEsp' or arg == 'ProgramarCitaEspecial' or arg == "SecretariaProgramarCitaMinor":
                 modulo = arg
-            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada' or arg == 'OpcionesSinEspecialidades' or arg == 'SecretariaProgramarCita' or arg == 'SecretariaProgramarCitaMenor':
+            elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada' or arg == 'OpcionesSinEspecialidades' or arg == 'SecretariaProgramarCita':
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades/SecretariaProgramarCita/SecretariaProgramarCitaMenor'
+                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades/SecretariaProgramarCita/SecretariaProgramarCitaMinor'
                 sys.exit()
 
             if ambiente != '':
@@ -489,7 +488,7 @@ def main(argv):
                     secretariaProgramarCita(driver)
                     print "Programacion --> OK"
 
-                elif modulo == 'SecretariaProgramarCitaMenor':
+                elif modulo == 'SecretariaProgramarCitaMinor':
                     email = "secretaria4@mediconecta.com"
                     pw = "dba123"
                     ambiente = "portaldev"
@@ -498,8 +497,8 @@ def main(argv):
                     log_in_dr(email, pw, driver, ambiente)
                     print " Autenticacion --> OK"
 
-                    print "Proceso: Programado una cita como secretaria para un dependiente"
-                    secretariaProgramarCitaMenor(driver)
+                    print "Proceso: Programado una cita como secretaria"
+                    secretariaProgramarCitaMinor(driver)
                     print "Programacion --> OK"
 
 
@@ -1793,6 +1792,8 @@ def secretariaProgramarCita(driver):
 
     driver.find_element_by_id("cphW_uccitasprogramadasdr_btnProgramarCita").click()
 
+    time.sleep(5)
+
     if "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios" in driver.page_source:
         consultorios = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios")]')
         all_options = consultorios.find_elements_by_tag_name("option")
@@ -1841,133 +1842,88 @@ def secretariaProgramarCita(driver):
     time.sleep(3)
     assert(("Scheduled Visits" in driver.title) or ("Citas Programadas" in driver.title)), "No en pagina de Citas Programadas"
 
-def secretariaProgramarCitaMenor(driver):
+def secretariaProgramarCitaMinor(driver):
+
+    time.sleep(3)
+    assert (("Scheduled Visits" in driver.title) or ("Citas Programadas" in driver.title)), "No en pagina de Citas Programadas"
+
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_btnProgramarCita").click()
+
     time.sleep(5)
-    if 'CITAS PROGRAMADAS' in driver.page_source:
-        driver.find_element_by_link_text('CITAS PROGRAMADAS').click()
-        time.sleep(5)
 
-        scroll("cphW_uccitasprogramadasdr_btnProgramarCita", driver)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_btnProgramarCita").click()
-        time.sleep(5)
-
-        if "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios" in driver.page_source:
-            element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios']")
-            all_options = element.find_elements_by_tag_name("option")
-            for option in all_options:
-                if option.get_attribute("value") == "001Z000000VEOKDIA5":
-                    option.click()
-                    break
-
-        print "Escogiendo doctor: Demo AS"
-        assert("cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores" in driver.page_source), "Cannot choose doctor"
-        scroll("cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores", driver)
-        element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores']")
-        all_options = element.find_elements_by_tag_name("option")
+    if "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios" in driver.page_source:
+        consultorios = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios")]')
+        all_options = consultorios.find_elements_by_tag_name("option")
+        print " Selecting: Test Consult VE"
         for option in all_options:
-            if option.get_attribute("value") == "003Z000001LIAF5IAP":
+            if option.get_attribute("value") == "001Z000000VEOKDIA5":
                 option.click()
                 break
 
-        scroll("hab_ctl00$cphW$uccitasprogramadasdr$btnContinuarEscogerConsulDoc", driver)
-        driver.find_element_by_xpath("//*[(@id = 'cphW_uccitasprogramadasdr_btnContinuarEscogerConsulDoc')]").click()
-        time.sleep(3)
+    time.sleep(5)
+    d = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores")]')
+    al_options = d.find_elements_by_tag_name("option")
+    print " Selecting: Demo AS doctor"
+    for option in al_options:
+        if option.get_attribute("value") == "003Z000001LIAF5IAP":
+            option.click()
+            break
 
-        print "Cita para un menor de edad? Si"
-        assert("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si" in driver.page_source), "Not on the right page"
-        scroll("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si", driver)
-        driver.find_element_by_id("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si").click()
-        time.sleep(3)
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_btnContinuarEscogerConsulDoc").click()
 
-        print "Escogiendo paciente"
-        assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda" in driver.page_source), "Not on the right page_source"
-        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda", driver)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda").click()
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda").send_keys("jenkins chrome tokbox")
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda").send_keys(Keys.ENTER)
-        time.sleep(4)
+    time.sleep(5)
+    print " Selecting menor de edad: Si"
+    driver.find_element_by_id("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si").click()
 
-        if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0" in driver.page_source:
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0", driver)
-            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0").click()
-            time.sleep(5)
-        else:
-            print "no patient was found"
+    time.sleep(3)
+    print " Searching for patient"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_txtBusqueda").send_keys("jenkins_chrome@mediconecta.com" + Keys.RETURN)
 
-        if "Nuevo Dependiente" in driver.page_source or "New Dependent" in driver.page_source:
-            print "registrando dependiente"
-            #first name
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre", driver)
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").click()
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").send_keys("Jenkins Jr")
-            #last name
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido", driver)
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").click()
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").send_keys("Chrome Jr")
-            #sexo
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo", driver)
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").click()
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys("M")
-            driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
-            #Registrar
-            scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
-            driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
-            print "Nuevo independiente registrado"
-            time.sleep(5)
-        else:
-            print "Escogiendo dependiente"
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0", driver)
-            driver.find_element_by_xpath("//*[(@id = 'cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0')]").click()
-            time.sleep(5)
+    time.sleep(2)
+    assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0" in driver.page_source), "No results"
 
-            #getting new time:
-            time_of_day = "AM"
-            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            year = current_time[0:4]
-            month = current_time[5:7]
-            day = current_time[8:10]
-            hour = current_time[11:13]
-            if int(hour) > 12:
-                time_of_day = "PM"
-                hour = str(int(hour) - 12)
-            minuto = current_time[14:16]
-            if int(minuto) > 45:
-                minuto = "00"
-                hour = str(int(hour) + 1)
-            elif int(minuto) < 15:
-                minuto = "00"
-            else:
-                minuto = "30"
+    print " Selecting patient"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0").click()
+    time.sleep(3)
 
-        assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha" in driver.page_source), "Did not go to the right page"
-        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
-        time.sleep(1)
-
-        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(str(int(hour) + 1) +':'+ minuto + " " + time_of_day)
-        time.sleep(1)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
-        time.sleep(1)
-
-        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar", driver)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
+    if "Nuevo Dependiente" in driver.page_source or "New Dependent" in driver.page_source:
+        print " Registrando dependiente"
+        #first name
+        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre", driver)
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").click()
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").send_keys("Jenkins Jr")
+        #last name
+        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido", driver)
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").click()
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").send_keys("Chrome Jr")
+        #sexo
+        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo", driver)
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").click()
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys("M")
+        driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
+        #Registrar
+        scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
+        driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
+        print "Nuevo independiente registrado"
+        time.sleep(5)
+    else:
+        print " Escogiendo dependiente"
+        scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0", driver)
+        driver.find_element_by_xpath("//*[(@id = 'cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0')]").click()
         time.sleep(5)
 
-        if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta", driver)
-            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").click()
-            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys("1")
-            time.sleep(1)
+    print " Setting date"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys("01/12/2017")
 
-            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar", driver)
-            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
-            time.sleep(5)
-        assert ("cphW_uccitasprogramadasdr_btnProgramarCita" in driver.page_source), "Cita no completada"
+    print " Setting time"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys("11:15 AM")
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
 
+    print " Programando cita"
+    driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
 
+    time.sleep(3)
+    assert(("Scheduled Visits" in driver.title) or ("Citas Programadas" in driver.title)), "No en pagina de Citas Programadas"
 
 start = time.time()
 main(sys.argv[1:])
