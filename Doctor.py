@@ -1754,8 +1754,8 @@ def DoctorProgramarCitaMinor(driver):
                     option.click()
                     break
             time.sleep(6)
-            phrase = venezuela_time + ":" + str(minuto) + " - Cita con Pruebas Jenkins Chrome Tokbox"
-            also_phrase = also_v_time + ":" + str(minuto) + " - Cita con Pruebas Jenkins Chrome Tokbox"
+            phrase = venezuela_time + ":" + str(minuto) + " - Cita con Jenkins Jr Chrome Jr"
+            also_phrase = also_v_time + ":" + str(minuto) + " - Cita con Jenkins Jr Chrome Jr"
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
