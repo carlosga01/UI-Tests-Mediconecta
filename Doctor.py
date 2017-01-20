@@ -96,12 +96,12 @@ def main(argv):
 
         elif opt in ("-m", "--m"):
             #Setear modulo
-            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas' or arg == "AppHistoriasClientes" or arg == "ProgramarCitaGlenNuevoP":
+            if arg == 'Autentica' or arg == 'Login' or arg == 'Atender' or arg == 'AtenderChrome' or arg == 'AtenderFirefox' or arg == 'AtenderIE' or arg == 'HistoriaCitas' or arg == "AppHistoriasClientes" or arg == "ProgramarCitaGalenNuevoP":
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor":
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/AppHistoriasClientes/ProgramarCitaGlenNuevoP'
+                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP'
                 sys.exit()
 
             if ambiente != '':
@@ -366,7 +366,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
-                elif modulo == "ProgramarCitaGlenNuevoP":
+                elif modulo == "ProgramarCitaGalenNuevoP":
                     print "Autenticando doctor: " + doctor
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
@@ -1506,13 +1506,13 @@ def DoctorProgramarCita(driver):
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
+        driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
         time.sleep(1)
 
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(hour +':'+ minuto + " " + time_of_day)
-        time.sleep(1)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
+        driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
         time.sleep(1)
 
         if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
@@ -1694,13 +1694,14 @@ def DoctorProgramarCitaMinor(driver):
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
+            driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
+
             time.sleep(1)
 
             scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
             driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(hour +':'+ minuto + " " + time_of_day)
-            time.sleep(1)
-            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
+            driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
             time.sleep(1)
 
             if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
@@ -1896,13 +1897,13 @@ def DoctorProgramarCitaNuevo(driver):
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
+        driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
         time.sleep(1)
 
         scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
         driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(hour +':'+ minuto + " " + time_of_day)
-        time.sleep(1)
-        driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
+        driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
         time.sleep(1)
 
         if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
