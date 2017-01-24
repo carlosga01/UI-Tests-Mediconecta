@@ -100,10 +100,10 @@ def main(argv):
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor" or arg == "ProgramarCitaGalenRegMinor" or arg == "DoctorProgramarCitaPaciente":
                 modulo = arg
-            elif arg == "reAgendarCancelarCita":
+            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias":
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita'
+                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias'
                 sys.exit()
 
             if ambiente != '':
@@ -408,6 +408,16 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                elif modulo == "DoctorProgramarCitaMinorCont":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("demoas@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Doctor Programar Cita"
+                    DoctorProgramarCitaMinorCont(driver)
+                    print " Cita --> OK"
+                    driver.quit
+
                 elif modulo == "reAgendarCancelarCita":
                     print "Autenticando doctor: " + doctor
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -427,6 +437,23 @@ def main(argv):
 
                     driver.quit
 
+                elif modulo == "DatosdelConsultorio":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Doctor Programar Cita"
+                    DatosdelConsultorio(driver)
+                    print " Doctor Programar Cita --> OK"
+
+                elif modulo == "ManejoDeSecretarias":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Manejo de Secretarias"
+                    ManejoDeSecretarias(driver)
+                    print "Menejo de Secretarias --> OK"
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -2570,6 +2597,189 @@ def DoctorProgramarCitaMinorRegRep(driver):
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
+def DoctorProgramarCitaMinorCont(driver):
+        time.sleep(5)
+        if 'CITAS PROGRAMADAS' in driver.page_source:
+            driver.find_element_by_link_text('CITAS PROGRAMADAS').click()
+            time.sleep(5)
+
+            scroll("cphW_uccitasprogramadasdr_btnProgramarCita", driver)
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_btnProgramarCita").click()
+            time.sleep(5)
+
+            if "cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios" in driver.page_source:
+                element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Consultorios']")
+                all_options = element.find_elements_by_tag_name("option")
+                for option in all_options:
+                    if option.get_attribute("value") == "001Z000000VEOKDIA5":
+                        option.click()
+                        break
+
+            print "Escogiendo doctor: Demo AS"
+            assert("cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores" in driver.page_source), "Cannot choose doctor"
+            scroll("cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores", driver)
+            element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlModalEscogerConsulDoc_Doctores']")
+            all_options = element.find_elements_by_tag_name("option")
+            for option in all_options:
+                if option.get_attribute("value") == "003Z000001LIAF5IAP":
+                    option.click()
+                    break
+
+            scroll("hab_ctl00$cphW$uccitasprogramadasdr$btnContinuarEscogerConsulDoc", driver)
+            driver.find_element_by_xpath("//*[(@id = 'cphW_uccitasprogramadasdr_btnContinuarEscogerConsulDoc')]").click()
+            time.sleep(3)
+
+            print "Cita para un menor de edad? Si"
+            assert("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si" in driver.page_source), "Not on the right page"
+            scroll("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si", driver)
+            driver.find_element_by_id("hab_ctl00$cphW$uccitasprogramadasdr$btnconfirmarMenor_Si").click()
+            time.sleep(3)
+
+            print "Escogiendo paciente"
+
+            if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0" in driver.page_source:
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0", driver)
+                driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0").click()
+                time.sleep(5)
+            else:
+                print "no patient was found"
+
+            if "Nuevo Dependiente" in driver.page_source or "New Dependent" in driver.page_source:
+                print "registrando dependiente"
+                #first name
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre", driver)
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").click()
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtNombre']").send_keys("Jenkins Jr")
+                #last name
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido", driver)
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").click()
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_txtApellido']").send_keys("Chrome Jr")
+                #sexo
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo", driver)
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").click()
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys("M")
+                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
+                #Registrar
+                scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
+                driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
+                print "Nuevo independiente registrado"
+                time.sleep(5)
+            else:
+                print "Escogiendo dependiente"
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0", driver)
+                driver.find_element_by_xpath("//*[(@id = 'cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0')]").click()
+                time.sleep(5)
+
+            #getting new time:
+            time_of_day = "AM"
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            year = current_time[0:4]
+            month = current_time[5:7]
+            day = current_time[8:10]
+            hour = current_time[11:13]
+            minuto = current_time[14:16]
+            hour = str(int(hour) + 1)
+            if int(minuto) > 45:
+                minuto = "00"
+                hour = str(int(hour) + 1)
+            elif int(minuto) < 15:
+                minuto = "00"
+            else:
+                minuto = "30"
+            if hour == "25":
+                hour = "1"
+                time_of_day = "AM"
+            if hour == "26":
+                hour = "2"
+                time_of_day = "AM"
+            if int(hour) >= 12 and int(hour) != 24:
+                time_of_day = "PM"
+            if int(hour) > 12:
+                hour = str(int(hour) - 12)
+
+            venezuela_time = str(int(hour) - 1)
+            also_v_time = venezuela_time
+            if venezuela_time == "0":
+                venezuela_time = "12"
+                if time_of_day == "PM":
+                    time_of_day = "AM"
+                else:
+                    time_of_day = "PM"
+            if time_of_day == "PM":
+                venezuela_time = str(int(venezuela_time) + 12)
+            if also_v_time == "12":
+                also_v_time = "00"
+
+            assert("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha" in driver.page_source), "Did not go to the right page"
+            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha", driver)
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").click()
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtFecha").send_keys(day + "/" + month + "/" + year)
+            driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
+
+            time.sleep(1)
+
+            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora", driver)
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").click()
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtHora").send_keys(hour +':'+ minuto + " " + time_of_day)
+            driver.find_element_by_xpath('//*[@id="cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_divDdlConsultorio"]/label').click()
+            time.sleep(1)
+
+            if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta" in driver.page_source:
+                scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta", driver)
+                driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").click()
+                driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys(Keys.BACKSPACE + Keys.BACKSPACE)
+                driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_txtPrecioConsulta").send_keys("1")
+                time.sleep(1)
+
+            if "cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas" in driver.page_source:
+                element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_ddlMonedas']")
+                all_options = element.find_elements_by_tag_name("option")
+                currency = None
+                for option in all_options:
+                    if option.get_attribute("value") == "a0nZ00000037vdjIAA":
+                        option.click()
+                        currency = "USD"
+                        print "Pay in USD"
+                        break
+                    elif option.get_attribute("value") == "a0nZ00000037vdeIAA":
+                        option.click()
+                        currency = "VEF"
+                        print "Pay in VEF"
+                        break
+            assert(currency != None), "No currency found"
+            scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar", driver)
+            driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucProgramarCita_btnProgramar").click()
+            time.sleep(5)
+
+            assert ("cphW_uccitasprogramadasdr_btnProgramarCita" in driver.page_source), "Cita no completada"
+
+            print "Checking if cita was made"
+            scroll("uniform-cphW_uccitasprogramadasdr_rblFiltrar", driver)
+            driver.find_element_by_id("uniform-cphW_uccitasprogramadasdr_rblFiltrar").click()
+            time.sleep(4)
+
+            if "cphW_uccitasprogramadasdr_ddlConsultorios" in driver.page_source:
+                element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlConsultorios']")
+                all_options = element.find_elements_by_tag_name("option")
+                for option in all_options:
+                    if option.get_attribute("value") == "001Z000000VEOKDIA5":
+                        option.click()
+                        break
+
+            time.sleep(5)
+            scroll("cphW_uccitasprogramadasdr_ddlDoctores", driver)
+            element = driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ddlDoctores']")
+            all_options = element.find_elements_by_tag_name("option")
+            for option in all_options:
+                if option.get_attribute("value") == "003Z000001LIAF5IAP":
+                    option.click()
+                    break
+            time.sleep(6)
+            phrase = venezuela_time + ":" + str(minuto) + " - Cita con Jenkins Jr Chrome Jr"
+            also_phrase = also_v_time + ":" + str(minuto) + " - Cita con Jenkins Jr Chrome Jr"
+            assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
+            print "Cita made and confirmed"
+
 def screenshot(driver, file_name):
     assert ("cphW_ucPacientesEnFila_btnSolicitarCitaHub" in driver.page_source), "Not on right page"
     scroll("cphW_ucPacientesEnFila_btnSolicitarCitaHub", driver)
@@ -2651,10 +2861,183 @@ def cancelarCita(driver):
 
     assert '08:00 - 08:45' not in driver.page_source
 
+def DatosdelConsultorio(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
+    time.sleep(1)
+    driver.find_element_by_id("liMicuenta").click()
+    time.sleep(3)
+    print "Entrando a Datos del Consultorio"
+    scroll("cphW_ucmicuentadoctor_liDatosConsultorio", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_liDatosConsultorio").click()
+    time.sleep(1)
 
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "001Z000000VEOKDIA5":
+            option.click()
+            break
 
+    scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_lnkEditarDatosConsultorio", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_lnkEditarDatosConsultorio").click()
+    time.sleep(3)
+    print "Editar informacion"
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
 
+    scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").clear()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").send_keys(numero_de_telephono)
 
+    scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
+    time.sleep(2)
+
+    assert(numero_de_telephono in driver.page_source), "No se guardo"
+    time.sleep(1)
+
+def ManejoDeSecretarias(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
+    time.sleep(1)
+    driver.find_element_by_id("liMicuenta").click()
+    time.sleep(3)
+    print "Entrando a Datos del Consultorio"
+    scroll("cphW_ucmicuentadoctor_liSecretarias", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_liSecretarias").click()
+    time.sleep(1)
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "001Z000000VEOKDIA5":
+            option.click()
+            break
+
+    scroll("cphW_ucmicuentadoctor_ctl34_btnBuscar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnBuscar").click()
+    time.sleep(3)
+
+    print "Registar secretaria"
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda").send_keys("NO EXISTE")
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_btnBuscarSecretaria").click()
+
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_btnRegistrar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_btnRegistrar").click()
+
+    #datos:
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
+    paciente = "Secretaria" + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
+    paciente_apellido = random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
+    cedula = random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
+    correo_e = paciente + "." + paciente_apellido + "@mediconecta.com"
+
+    #first name
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre']").send_keys(paciente)
+    #last name
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido']").send_keys(paciente_apellido)
+    #Nacionalidad
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlNacionalidad")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "Venezuela":
+            option.click()
+            break
+    #Cedula
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula']").send_keys(cedula)
+    #fecha de nacimiento
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia']").send_keys("1" + Keys.ENTER)
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes']").send_keys("1" + Keys.ENTER)
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno']").send_keys("1" + Keys.ENTER)
+    #sexo
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys("M")
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys(Keys.ENTER)
+    #telephono
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular']").send_keys(numero_de_telephono)
+    #correo electronico
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail", driver)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail']").click()
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail']").send_keys(correo_e + Keys.ENTER)
+
+    time.sleep(5)
+    assert(paciente_apellido in driver.page_source), "no se registro"
+
+    print "Testing Agregar Secretaria"
+    scroll("cphW_ucmicuentadoctor_ctl34_btnBuscar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnBuscar").click()
+    time.sleep(3)
+
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_txtBusqueda").send_keys("Secre3 Pruebas")
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_btnBuscarSecretaria").click()
+
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_rptTable_btnAgregarSecretaria_0", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_rptTable_btnAgregarSecretaria_0").click()
+    time.sleep(1)
+    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_btnAsociarSecretaria", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ctl06_btnAsociarSecretaria").click()
+    time.sleep(3)
+    assert("Secre3" in driver.page_source), "No agrego secretaria"
+
+    print "Editar datos de secretaria"
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6").click()
+    secretaria_correo = "secre3." + random.choice(numbers) + "@mediconecta.com"
+    time.sleep(2)
+    scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").clear()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").send_keys(secretaria_correo + Keys.ENTER)
+    time.sleep(4)
+    assert(secretaria_correo in driver.page_source), "cambios no registrados"
+
+    print "Ver datos"
+    driver.save_screenshot("ver_before.jpg")
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
+    time.sleep(3)
+    driver.save_screenshot("ver_after.jpg")
+
+    before = Image.open('ver_before.jpg')
+    after = Image.open('ver_after.jpg')
+    if list(before.getdata()) == list(after.getdata()):
+        assert(False), "Did not go to the right page"
+    else:
+        pass
+
+    scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08", driver)
+    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+    time.sleep(3)
+
+    print "Eliminar secretaria"
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6").click()
+    scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
+    assert(secretaria_correo not in driver.page_source), "no se elimino"
+    time.sleep(2)
+    
 start = time.time()
 main(sys.argv[1:])
 print "Execution Time: " + str(int((time.time() - start))) + " seconds"
