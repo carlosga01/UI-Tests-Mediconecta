@@ -100,10 +100,12 @@ def main(argv):
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor" or arg == "ProgramarCitaGalenRegMinor" or arg == "DoctorProgramarCitaPaciente":
                 modulo = arg
-            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias":
+            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones":
                 modulo = arg
             else:
-                print 'valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias'
+                print ('valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/'
+                       'DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias/ManejoDeMonedas/ManejoDeConfiguraciones'
+                )
                 sys.exit()
 
             if ambiente != '':
@@ -454,6 +456,24 @@ def main(argv):
                     print "Proceso: Manejo de Secretarias"
                     ManejoDeSecretarias(driver)
                     print "Menejo de Secretarias --> OK"
+
+                elif modulo == "ManejoDeMonedas":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Manejo de monedas"
+                    ManejoDeMonedas(driver)
+                    print "Menejo de monedas --> OK"
+
+                elif modulo == "ManejoDeConfiguraciones":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Manejo de Configuraciones"
+                    ManejoDeConfiguraciones(driver)
+                    print "Menejo de Configuraciones --> OK"
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -2903,7 +2923,6 @@ def ManejoDeSecretarias(driver):
     time.sleep(1)
     driver.find_element_by_id("liMicuenta").click()
     time.sleep(3)
-    print "Entrando a Datos del Consultorio"
     scroll("cphW_ucmicuentadoctor_liSecretarias", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_liSecretarias").click()
     time.sleep(1)
@@ -2911,7 +2930,7 @@ def ManejoDeSecretarias(driver):
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
     all_options = element.find_elements_by_tag_name("option")
     for option in all_options:
-        if option.get_attribute("value") == "001Z000000VEOKDIA5":
+        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
             option.click()
             break
 
@@ -2968,8 +2987,7 @@ def ManejoDeSecretarias(driver):
     #sexo
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo", driver)
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").click()
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys("M")
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys(Keys.ENTER)
+    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys("M" + Keys.ENTER)
     #telephono
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular", driver)
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular']").click()
@@ -3001,8 +3019,8 @@ def ManejoDeSecretarias(driver):
     assert("Secre3" in driver.page_source), "No agrego secretaria"
 
     print "Editar datos de secretaria"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6").click()
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_2", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_2").click()
     secretaria_correo = "secre3." + random.choice(numbers) + "@mediconecta.com"
     time.sleep(2)
     scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail", driver)
@@ -3014,8 +3032,8 @@ def ManejoDeSecretarias(driver):
 
     print "Ver datos"
     driver.save_screenshot("ver_before.jpg")
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_2", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_2").click()
     time.sleep(3)
     driver.save_screenshot("ver_after.jpg")
 
@@ -3031,13 +3049,164 @@ def ManejoDeSecretarias(driver):
     time.sleep(3)
 
     print "Eliminar secretaria"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6").click()
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_2", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_2").click()
     scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
     assert(secretaria_correo not in driver.page_source), "no se elimino"
     time.sleep(2)
-    
+
+def ManejoDeMonedas(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
+    time.sleep(1)
+    driver.find_element_by_id("liMicuenta").click()
+    time.sleep(3)
+    scroll("cphW_ucmicuentadoctor_liDoctores", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_liDoctores").click()
+    time.sleep(1)
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
+            option.click()
+            break
+
+    print "Entrando a manejo de monedas"
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_4", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_4').click()
+    time.sleep(2)
+    print "Agregando nuevo moneda"
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrear", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrear").click()
+    time.sleep(3)
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_ddlMoneda")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "USD":
+            option.click()
+            break
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_txtPrecioConsulta", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_txtPrecioConsulta").send_keys("3")
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda").click()
+    time.sleep(3)
+
+    print "Verificando los botones ver y editar"
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0").click()
+    time.sleep(3)
+    driver.save_screenshot("mm_ver_before.jpg")
+
+    scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13", driver)
+    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13").click()
+    time.sleep(3)
+
+    scroll('cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_0', driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_0").click()
+    time.sleep(3)
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_ucRU_txtPrecioConsulta", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_ucRU_txtPrecioConsulta").clear()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_ucRU_txtPrecioConsulta").send_keys("5")
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnEditarMoneda", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnEditarMoneda").click()
+    time.sleep(2)
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0").click()
+    time.sleep(3)
+    driver.save_screenshot("mm_ver_after.jpg")
+
+    before = Image.open('mm_ver_before.jpg')
+    after = Image.open('mm_ver_after.jpg')
+    if list(before.getdata()) == list(after.getdata()):
+        assert(False), "Edits did not save"
+    else:
+        pass
+
+    scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13", driver)
+    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13").click()
+    time.sleep(2)
+
+    print "Eliminado moneda"
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_0",driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_0").click()
+    time.sleep(1)
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnEliminarModal", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnEliminarModal").click()
+    time.sleep(1)
+
+def ManejoDeConfiguraciones(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
+    time.sleep(1)
+    driver.find_element_by_id("liMicuenta").click()
+    time.sleep(3)
+    scroll("cphW_ucmicuentadoctor_liDoctores", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_liDoctores").click()
+    time.sleep(1)
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
+            option.click()
+            break
+
+    print "Entrando a manejo de configuraciones"
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_4", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_4').click()
+    time.sleep(2)
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "CorreoElectronico":
+            option.click()
+            break
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlCorreosCitasProgramadas")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "Secretaria":
+            option.click()
+            break
+
+    driver.save_screenshot("mc_ver_before.jpg")
+    time.sleep(4)
+
+    print "Verificando los editos a manejo de configuraciones"
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "MensajeTexto":
+            option.click()
+            break
+
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlCorreosCitasProgramadas")]')
+    all_options = element.find_elements_by_tag_name("option")
+    for option in all_options:
+        if option.get_attribute("value") == "Doctor":
+            option.click()
+            break
+
+    driver.save_screenshot("mc_ver_after.jpg")
+
+    before = Image.open('mc_ver_before.jpg')
+    after = Image.open('mc_ver_after.jpg')
+    if list(before.getdata()) == list(after.getdata()):
+        assert(False), "Edits did not save"
+    else:
+        pass
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
+    time.sleep(3)
+
 start = time.time()
 main(sys.argv[1:])
 print "Execution Time: " + str(int((time.time() - start))) + " seconds"
