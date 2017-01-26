@@ -519,6 +519,8 @@ def log_in(email, pw, driver, ambiente):
     driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
     driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
 
+    time.sleep(15)
+
     if "Terminos" in driver.current_url:
         scroll("cphW_btnAceptar", driver)
         driver.find_element_by_id("cphW_btnAceptar").click()
@@ -3211,8 +3213,8 @@ def ManejoDeConfiguraciones(driver):
             break
 
     print "Entrando a manejo de configuraciones"
-    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_3", driver)
-    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_3').click()
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5').click()
     time.sleep(2)
 
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
@@ -3282,6 +3284,7 @@ def AppLogEmails(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-LogEmails", " " ))]').click()
     time.sleep(5)
 
+    print "Checking 'Dashboard' tab"
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-input", " " ))]').click()
     time.sleep(1)
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-textbox", " " ))]').send_keys("Paciente_Resumen_Cita")
@@ -3324,7 +3327,6 @@ def AppLogEmails(driver):
     Rebotes = Image.open("Rebotes.jpg")
     Spam = Image.open("Spam.jpg")
 
-    print "STARTING"
     driver.refresh()
 
     if list(Procesados.getdata()) == list(Entregados.getdata()):
@@ -3357,7 +3359,6 @@ def AppLogEmails(driver):
         assert(False), "Did not go to the right page"
     if list(Rebotes.getdata()) == list(Spam.getdata()):
         assert(False), "Did not go to the right page"
-    print "DONE"
 
     #### if you wish to remove images from folder, uncomment following lines:###
     '''
@@ -3368,11 +3369,12 @@ def AppLogEmails(driver):
     os.remove(Rebotes.jpg)
     os.remove(Spam.jpg)
     '''
-
+    
+    print "Checking the 'Mensajes' tab"
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-envelope", " " ))]').click()
     time.sleep(2)
     driver.save_screenshot("Original.jpg")
-
+    print "Checking email filter"
     #email
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[1]/div/input').send_keys("us1@mediconecta.com")
     time.sleep(2)
@@ -3385,6 +3387,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
+    print "Checking date filter"
     #dates
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[1]/span/input').send_keys("11/20/2016")
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[3]/span/input').send_keys("12/24/2016")
@@ -3398,6 +3401,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
+    print "Checking category filter"
     #categoria
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[3]/div/span/span').click()
     time.sleep(1)
@@ -3414,6 +3418,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
+    print "Checking event filter"
     #Evento
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[4]/div/span/span').click()
     time.sleep(1)
@@ -3456,7 +3461,6 @@ def AppLogEmails(driver):
     '''
 
     time.sleep(4)
-
 
 def manejoDoctores(driver):
     time.sleep(3)
@@ -3656,9 +3660,6 @@ def manejoDoctores(driver):
     si = driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_btnEliminarDoctor")
     si.click()
     time.sleep(3)
-
-
-
 
 start = time.time()
 main(sys.argv[1:])
