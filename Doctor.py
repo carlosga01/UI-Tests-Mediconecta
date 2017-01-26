@@ -114,11 +114,13 @@ def main(argv):
                     driver = webdriver.Chrome()
                     doctor = act_username_chrome
                     act_birthday = act_birthday_chrome
+                    Firefox = False
 
                 elif navegador == 'Firefox':
                     driver = webdriver.Firefox()
                     doctor = act_username_firefox
                     act_birthday = act_birthday_firefox
+                    Firefox = True
 
                 elif navegador == 'Ie':
                     driver = webdriver.Ie()
@@ -511,6 +513,8 @@ def log_in(email, pw, driver, ambiente):
     driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
     driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
 
+    if Firefox == True:
+        time.sleep(10)
 
     if "Terminos" in driver.current_url:
         scroll("cphW_btnAceptar", driver)
