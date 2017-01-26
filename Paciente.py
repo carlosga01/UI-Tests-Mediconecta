@@ -125,7 +125,7 @@ def main(argv):
                 modulo = arg
             elif arg == 'CitaODTokboxGeneral' or arg == 'CitaODTokboxAtender' or arg == 'Phr' or arg == 'MiCuenta' or arg == 'SSO' or arg == 'AppMisCitas' or arg == 'AtenderCitaProgramada' or arg == 'OpcionesSinEspecialidades' or arg == 'SecretariaProgramarCita' or arg == 'SecretariaProgramarCitaMenor':
                 modulo = arg
-            elif arg == 'AppContactos':
+            elif arg == 'AppContactos' or arg == 'IrACitaPorEmail':
                 modulo = arg
 
             else:
@@ -515,6 +515,9 @@ def main(argv):
                     appContactos(driver)
                     print "App Contactos --> OK"
 
+                elif modulo == 'IrACitaPorEmail':
+                    print 'Proceso: Entrando a email'
+                    emailCitaProgramada(driver, ambiente)
 
                 print "== Pruebas del paciente finalizadas =="
 
@@ -2259,6 +2262,73 @@ def appContactos(driver):
     driver.back()
     time.sleep(3)
     assert "Contactos" in driver.title, "Not on the conctacts page"
+
+def emailCitaProgramada(driver, ambiente):
+    user = 'cgarcia@mediconecta.com'
+    pw = '01161997'
+
+    print " Login por email: " + user
+
+    driver.get("https://mail.google.com")
+    username = driver.find_element_by_id('Email')
+    username.send_keys(user + Keys.RETURN)
+    time.sleep(2)
+    passwd = driver.find_element_by_id('Passwd')
+    passwd.send_keys(pw + Keys.RETURN)
+
+    time.sleep(5)
+
+    print " Buscando email.."
+    search = driver.find_element_by_id('gbqfq')
+    search.send_keys('Su cita medica' + Keys.RETURN)
+
+    time.sleep(3)
+
+
+    click = ActionChains(driver).move_to_element_with_offset(search,222,112).click().perform()
+
+    print " Entrando en el link.."
+    time.sleep(2)
+    links = driver.find_elements_by_partial_link_text('http://portaldev.mediconecta.com')
+    links[-1].click()
+
+    email = 'jenkins_chrome@mediconecta.com'
+    pw = 'dba123'
+
+    driver.switch_to_window(driver.window_handles[1])
+
+    time.sleep(5)
+
+    if "Login" in driver.title:
+        print ' Autenticando Paciente..'
+        scroll("cphW_txtUsuario", driver)
+        driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
+        scroll("cphW_txtPassword", driver)
+        driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
+        time.sleep(5)
+
+        if "Terminos" in driver.current_url:
+            print ' Aceptando terminos..'
+            scroll("cphW_btnAceptar", driver)
+            driver.find_element_by_id("cphW_btnAceptar").click()
+            print " Aceptar Terminos --> OK"
+            time.sleep(3)
+
+        if "Solicitud de Citas" in driver.page_source:
+            return "exitoso"
+        elif "e-visit" in driver.page_source:
+            return "exitoso"
+        elif "El usuario ingresado" in driver.page_source:
+            return "inactivo"
+        else:
+            return "fallido"
+    else:
+        sys.exit(-1)
+
+    time.sleep(5)
+
+    assert 'Cita' in driver.title, 'Not entered in la cita'
+
 
 
 
