@@ -108,13 +108,12 @@ def main(argv):
                        'DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias/ManejoDeMonedas/ManejoDeConfiguraciones/AppAtencionAlCliente/AppLogEmails'
                 )
                 sys.exit()
-
+            Firefox = False
             if ambiente != '':
                 if navegador == 'Chrome':
                     driver = webdriver.Chrome()
                     doctor = act_username_chrome
                     act_birthday = act_birthday_chrome
-                    Firefox = False
 
                 elif navegador == 'Firefox':
                     driver = webdriver.Firefox()
