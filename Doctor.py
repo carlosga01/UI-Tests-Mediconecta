@@ -100,11 +100,11 @@ def main(argv):
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor" or arg == "ProgramarCitaGalenRegMinor" or arg == "DoctorProgramarCitaPaciente":
                 modulo = arg
-            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones":
+            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones" or arg == "AppAtencionAlCliente" or arg == "AppLogEmails":
                 modulo = arg
             else:
                 print ('valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/'
-                       'DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias/ManejoDeMonedas/ManejoDeConfiguraciones'
+                       'DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias/ManejoDeMonedas/ManejoDeConfiguraciones/AppAtencionAlCliente/AppLogEmails'
                 )
                 sys.exit()
 
@@ -474,6 +474,24 @@ def main(argv):
                     print "Proceso: Manejo de Configuraciones"
                     ManejoDeConfiguraciones(driver)
                     print "Menejo de Configuraciones --> OK"
+
+                elif modulo == "AppAtencionAlCliente":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: App Atencion al Cliente"
+                    AppAtencionAlCliente(driver)
+                    print "App Atencion al Cliente --> OK"
+
+                elif modulo == "AppLogEmails":
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, "consultas") == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: App Log Emails"
+                    AppLogEmails(driver)
+                    print "App Log Emails --> OK"
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -2913,7 +2931,7 @@ def DatosdelConsultorio(driver):
     scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
     driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
-    time.sleep(2)
+    time.sleep(4)
 
     assert(numero_de_telephono in driver.page_source), "No se guardo"
     time.sleep(1)
@@ -3095,7 +3113,7 @@ def ManejoDeMonedas(driver):
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda").click()
     time.sleep(3)
 
-    print "Verificando los botones ver y editar"
+    print "Verificando los botones 'ver' y 'editar'"
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0").click()
     time.sleep(3)
@@ -3206,6 +3224,181 @@ def ManejoDeConfiguraciones(driver):
     scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
     time.sleep(3)
+
+def AppAtencionAlCliente(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-AtencionAlCliente", " " ))]').click()
+    time.sleep(2)
+    print "Buscando cliente Jenkins Chrome"
+    scroll("cphW_ucBuscarPacienteTelefono_txtBusqueda", driver)
+    driver.find_element_by_id("cphW_ucBuscarPacienteTelefono_txtBusqueda").send_keys("1231234" + Keys.ENTER)
+    time.sleep(2)
+
+    assert("Pruebas Jenkins Chrome Tokbox" in driver.page_source), "No encontro paciente"
+    print "Paciente Jenkins Chrome encontrado"
+    time.sleep(5)
+
+def AppLogEmails(driver):
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-LogEmails", " " ))]').click()
+    time.sleep(5)
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-input", " " ))]').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-textbox", " " ))]').send_keys("Paciente_Resumen_Cita")
+    #driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-textbox", " " ))]').send_keys("Correo_Inicial_Saludsa_Corporativos")
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "k-textbox", " " ))]').send_keys(Keys.ENTER)
+    time.sleep(3)
+
+    element = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[1]/div[1]/span')
+    driver.execute_script("return arguments[0].scrollIntoView();", element)
+    time.sleep(1)
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "processed", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Procesados.jpg")
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "delivered", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Entregados.jpg")
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "open", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Abiertos.jpg")
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "click", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Clicks.jpg")
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "bounce", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Rebotes.jpg")
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "spamreport", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Spam.jpg")
+
+    Procesados = Image.open("Procesados.jpg")
+    Entregados = Image.open("Entregados.jpg")
+    Abiertos = Image.open("Abiertos.jpg")
+    Clicks = Image.open("Clicks.jpg")
+    Rebotes = Image.open("Rebotes.jpg")
+    Spam = Image.open("Spam.jpg")
+
+    print "STARTING"
+    driver.refresh()
+    
+    if list(Procesados.getdata()) == list(Entregados.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Procesados.getdata()) == list(Abiertos.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Procesados.getdata()) == list(Clicks.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Procesados.getdata()) == list(Rebotes.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Procesados.getdata()) == list(Spam.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Entregados.getdata()) == list(Abiertos.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Entregados.getdata()) == list(Clicks.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Entregados.getdata()) == list(Rebotes.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Entregados.getdata()) == list(Spam.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Abiertos.getdata()) == list(Clicks.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Abiertos.getdata()) == list(Rebotes.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Abiertos.getdata()) == list(Spam.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Clicks.getdata()) == list(Rebotes.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Clicks.getdata()) == list(Spam.getdata()):
+        assert(False), "Did not go to the right page"
+    if list(Rebotes.getdata()) == list(Spam.getdata()):
+        assert(False), "Did not go to the right page"
+    print "DONE"
+
+    driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-envelope", " " ))]').click()
+    time.sleep(2)
+    driver.save_screenshot("Original.jpg")
+
+    #email
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[1]/div/input').send_keys("us1@mediconecta.com")
+    time.sleep(2)
+
+    #Search and Erase buttons vvvv
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[1]').click()
+    time.sleep(3)
+    driver.save_screenshot("Email.jpg")
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[2]').click()
+    time.sleep(2)
+    #Search and Erase buttons ^^^^
+
+    #dates
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[1]/span/input').send_keys("11/20/2016")
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[3]/span/input').send_keys("12/24/2016")
+    time.sleep(2)
+
+    #Search and Erase buttons vvvv
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[1]').click()
+    time.sleep(3)
+    driver.save_screenshot("Dates.jpg")
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[2]').click()
+    time.sleep(2)
+    #Search and Erase buttons ^^^^
+
+    #categoria
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[3]/div/span/span').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/div[10]/div/span/input').send_keys("Contacto_Cambio_Login")
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/div[10]/div/span/input').send_keys(Keys.ENTER)
+    time.sleep(2)
+
+    #Search and Erase buttons vvvv
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[1]').click()
+    time.sleep(3)
+    driver.save_screenshot("Categoria.jpg")
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[2]').click()
+    time.sleep(2)
+    #Search and Erase buttons ^^^^
+
+    #Evento
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[4]/div/span/span').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/div[9]/div/span/input').send_keys('Eliminados')
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/div[9]/div/span/input').send_keys(Keys.ENTER)
+
+    time.sleep(3)
+
+    #Search and Erase buttons vvvv
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[1]').click()
+    time.sleep(3)
+    driver.save_screenshot("Evento.jpg")
+    driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/button[2]').click()
+    time.sleep(2)
+    #Search and Erase buttons ^^^^
+
+    Original = Image.open("Original.jpg")
+    Email = Image.open("Email.jpg")
+    Dates = Image.open("Dates.jpg")
+    Categoria = Image.open("Categoria.jpg")
+    Evento = Image.open("Evento.jpg")
+
+    if list(Original.getdata()) == list(Email.getdata()):
+        assert(False), "Email search did not filter results"
+    if list(Original.getdata()) == list(Dates.getdata()):
+        assert(False), "Dates search did not filter results"
+    if list(Original.getdata()) == list(Categoria.getdata()):
+        assert(False), "Categoria search did not filter results"
+    if list(Original.getdata()) == list(Evento.getdata()):
+        assert(False), "Evento search did not filter results"
+
+    time.sleep(4)
+
+
+
 
 start = time.time()
 main(sys.argv[1:])
