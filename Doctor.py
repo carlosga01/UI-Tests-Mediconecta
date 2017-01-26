@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 import time, unicodedata, sys, getopt
 import random
+import os
 
 #pip install Pillow
 import PIL
@@ -394,6 +395,12 @@ def main(argv):
                         assert(False), "Did register the cita"
                     else:
                         print "Cita was registered"
+
+                    #### if you wish to remove images from folder, uncomment following lines:###
+                    '''
+                    os.remove(before_cita.jpg)
+                    os.remove(after_cita.jpg)
+                    '''
 
                     print " Cita --> OK"
                     time.sleep(3)
@@ -978,6 +985,12 @@ def historiaCitas(paciente, driver):
         assert(False), "Did not go to the right page"
     else:
         pass
+
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(before.jpg)
+    os.remove(after.jpg)
+    '''
 
     time.sleep(2)
 
@@ -3062,6 +3075,12 @@ def ManejoDeSecretarias(driver):
     else:
         pass
 
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(ver_before.jpg)
+    os.remove(ver_after.jpg)
+    '''
+
     scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08", driver)
     driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
     time.sleep(3)
@@ -3147,6 +3166,12 @@ def ManejoDeMonedas(driver):
     else:
         pass
 
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(mm_ver_before.jpg)
+    os.remove(mm_ver_after.jpg)
+    '''
+
     scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13", driver)
     driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13").click()
     time.sleep(2)
@@ -3221,6 +3246,12 @@ def ManejoDeConfiguraciones(driver):
     else:
         pass
 
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(mc_ver_before.jpg)
+    os.remove(mc_ver_after.jpg)
+    '''
+
     scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
     time.sleep(3)
@@ -3285,7 +3316,7 @@ def AppLogEmails(driver):
 
     print "STARTING"
     driver.refresh()
-    
+
     if list(Procesados.getdata()) == list(Entregados.getdata()):
         assert(False), "Did not go to the right page"
     if list(Procesados.getdata()) == list(Abiertos.getdata()):
@@ -3317,6 +3348,16 @@ def AppLogEmails(driver):
     if list(Rebotes.getdata()) == list(Spam.getdata()):
         assert(False), "Did not go to the right page"
     print "DONE"
+
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(Procesados.jpg)
+    os.remove(Entregados.jpg)
+    os.remove(Abiertos.jpg)
+    os.remove(Clicks.jpg)
+    os.remove(Rebotes.jpg)
+    os.remove(Spam.jpg)
+    '''
 
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-envelope", " " ))]').click()
     time.sleep(2)
@@ -3395,10 +3436,16 @@ def AppLogEmails(driver):
     if list(Original.getdata()) == list(Evento.getdata()):
         assert(False), "Evento search did not filter results"
 
+    #### if you wish to remove images from folder, uncomment following lines:###
+    '''
+    os.remove(Original.jpg)
+    os.remove(Email.jpg)
+    os.remove(Dates.jpg)
+    os.remove(Categoria.jpg)
+    os.remove(Evento.jpg)
+    '''
+
     time.sleep(4)
-
-
-
 
 start = time.time()
 main(sys.argv[1:])
