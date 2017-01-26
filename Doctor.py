@@ -100,7 +100,7 @@ def main(argv):
                 modulo = arg
             elif arg == "Pruebas_de_Diagnostico" or arg == "Pruebas_de_Prescripciones" or arg == "Pruebas_de_Examenes" or arg == 'AtenderPacienteConDPE' or arg == "ProgramarCitaGalen" or arg == "ProgramarCitaGalenMinor" or arg == "ProgramarCitaGalenRegMinor" or arg == "DoctorProgramarCitaPaciente":
                 modulo = arg
-            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones" or arg == "AppAtencionAlCliente" or arg == "AppLogEmails":
+            elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones" or arg == "AppAtencionAlCliente" or arg == "AppLogEmails" or arg == 'ManejoDoctores':
                 modulo = arg
             else:
                 print ('valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/'
@@ -497,6 +497,16 @@ def main(argv):
                     print "Proceso: App Log Emails"
                     AppLogEmails(driver)
                     print "App Log Emails --> OK"
+
+                elif modulo == 'ManejoDoctores':
+
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: Manejo de Doctores"
+                    manejoDoctores(driver)
+                    print "Manejo de Doctores --> OK"
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -3446,6 +3456,209 @@ def AppLogEmails(driver):
     '''
 
     time.sleep(4)
+
+
+def manejoDoctores(driver):
+    time.sleep(3)
+
+    dropDownName = driver.find_element_by_xpath('//*[@id="upLoginMaster"]/div/div')
+    dropDownName.click()
+
+    miCuenta = driver.find_element_by_xpath('//*[@id="lbMiCuenta"]/span')
+    miCuenta.click()
+
+    time.sleep(5)
+    assert 'Mi Cuenta' in driver.title, 'Not taken to Mi Cuenta'
+
+    doctores = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_liDoctores"]/a/span')
+    doctores.click()
+    time.sleep(3)
+
+
+    print " Eliminando doctor.."
+
+    """
+    page2 = driver.find_element_by_xpath('//*[@id="listado-Doctores_paginate"]/ul/li[3]/a')
+    page2.click()
+    time.sleep(3)
+    """
+
+    trashCan = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_rptTable_btnEliminar_5"]/i')
+    trashCan.click()
+    time.sleep(4)
+    si = driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_btnEliminarDoctor")
+    si.click()
+
+    time.sleep(3)
+    driver.refresh()
+    time.sleep(3)
+    doctores = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_liDoctores"]/a/span')
+    doctores.click()
+    time.sleep(3)
+
+    assert "Demo AS" not in driver.page_source, "Doctor not deleted"
+
+    print " Agregando doctor.."
+    agregarDoctor = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_btnBuscar')
+    agregarDoctor.click()
+    time.sleep(4)
+
+    buscar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_txtBusqueda')
+    buscar.send_keys('Demo AS')
+    time.sleep(3)
+    enter = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_ctl08_btnBuscarDoctor"]/i')
+    enter.click()
+    time.sleep(3)
+
+    agregar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_rptTable_btnAgregarDoctor_0')
+    agregar.click()
+    time.sleep(3)
+    si = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_btnAsociarDoctor')
+    si.click()
+    time.sleep(3)
+
+    assert "Demo AS" in driver.page_source, "Doctor not added"
+
+
+    print " Registrando doctor neuvo.."
+    time.sleep(3)
+    agregarDoctor = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_btnBuscar"]/span')
+    agregarDoctor.click()
+    time.sleep(4)
+
+    numbers = range(1000)
+    number = numbers[random.randint(0,1000)]
+    nombre = "AAAAA" + str(number)
+    apellido = "Doctor" + str(number)
+
+    buscar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_txtBusqueda')
+    buscar.send_keys(nombre + " " + apellido)
+    time.sleep(3)
+    enter = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_ctl08_btnBuscarDoctor"]/i')
+    enter.click()
+    time.sleep(3)
+
+    registarar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_btnRegistrar')
+    registarar.click()
+    time.sleep(3)
+
+    name = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtNombre')
+    name.send_keys(nombre)
+
+    last = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtApellido')
+    last.send_keys(apellido)
+
+
+    nat = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_ddlNacionalidad')
+    nat.send_keys('Est' + Keys.RETURN)
+
+    cedula = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtCedula')
+    cedula.send_keys('56374857')
+
+    dia = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_ucFecha_ddlDia')
+    dia.send_keys('1' + Keys.RETURN)
+
+    mes = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_ucFecha_ddlMes')
+    mes.send_keys('1' + Keys.RETURN)
+
+    yr = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_ucFecha_ddlAnno')
+    yr.send_keys('2017' + Keys.RETURN)
+
+    sexo = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_ddlSexo')
+    sexo.send_keys('m' + Keys.RETURN)
+
+    phone = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtCelular')
+    phone.send_keys('3053053055')
+
+    email = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtEmail')
+    email.send_keys(nombre + apellido + "@gmail.com")
+
+    title = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtTituloUniversitario')
+    title.send_keys('Test Doctor')
+
+    university = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtUniversidad')
+    university.send_keys('Test University')
+
+    specialty = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtEspecialidades')
+    specialty.send_keys('Dentista' + Keys.RETURN)
+
+    regNum = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtCodigoMedico')
+    regNum.send_keys('123456789')
+
+    otherNum = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtCodigoMedico2')
+    otherNum.send_keys('123456789876543321')
+
+    enter = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_btnRegistrarDoctor')
+    enter.click()
+
+    time.sleep(3)
+    assert nombre in driver.page_source, 'New Doctor not registered'
+
+
+    print " Editando informacion de doctor neuvo.."
+
+    time.sleep(3)
+    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_16')
+    ver.click()
+
+    time.sleep(3)
+    driver.save_screenshot('doctor1.jpg')
+    time.sleep(2)
+
+    cerrar = driver.find_element_by_xpath('//*[@id="hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl10"]/input')
+    cerrar.click()
+    time.sleep(2)
+
+    editar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnEditar_16')
+    editar.click()
+    time.sleep(2)
+
+    u = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ucDatosDoctor_txtTituloUniversitario')
+    u.clear()
+    u.send_keys('Doctor Test')
+
+    university = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ucDatosDoctor_txtUniversidad')
+    university.clear()
+    university.send_keys("Universidad Testing" + str(number) + Keys.RETURN)
+
+    time.sleep(3)
+    driver.refresh()
+    time.sleep(3)
+    doctores = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_liDoctores"]/a/span')
+    doctores.click()
+    time.sleep(3)
+
+
+    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_16')
+    ver.click()
+    time.sleep(5)
+
+    driver.save_screenshot('doctor2.jpg')
+
+    cerrar = driver.find_element_by_xpath('//*[@id="hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl10"]/input')
+    cerrar.click()
+    time.sleep(2)
+
+    img1 = Image.open('doctor1.jpg')
+    img2 = Image.open('doctor2.jpg')
+
+    if list(img1.getdata()) == list(img2.getdata()):
+        assert False, "No changes occured after editing"
+
+
+
+    print " Eliminando doctor nuevo.."
+
+    time.sleep(3)
+    trashCan = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_rptTable_btnEliminar_16"]/i')
+    trashCan.click()
+    time.sleep(4)
+    si = driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_btnEliminarDoctor")
+    si.click()
+    time.sleep(3)
+
+
+
 
 start = time.time()
 main(sys.argv[1:])
