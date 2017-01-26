@@ -2961,7 +2961,7 @@ def ManejoDeSecretarias(driver):
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
     all_options = element.find_elements_by_tag_name("option")
     for option in all_options:
-        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
+        if option.get_attribute("value") == "001Z000000VEOKDIA5":
             option.click()
             break
 
@@ -3031,6 +3031,7 @@ def ManejoDeSecretarias(driver):
     time.sleep(5)
     assert(paciente_apellido in driver.page_source), "no se registro"
 
+
     print "Testing Agregar Secretaria"
     scroll("cphW_ucmicuentadoctor_ctl34_btnBuscar", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnBuscar").click()
@@ -3049,24 +3050,31 @@ def ManejoDeSecretarias(driver):
     time.sleep(3)
     assert("Secre3" in driver.page_source), "No agrego secretaria"
 
-    print "Editar datos de secretaria"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_2", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_2").click()
-    secretaria_correo = "secre3." + random.choice(numbers) + "@mediconecta.com"
-    time.sleep(2)
-    scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").click()
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").clear()
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtEmail").send_keys(secretaria_correo + Keys.ENTER)
-    time.sleep(4)
-    assert(secretaria_correo in driver.page_source), "cambios no registrados"
-
-    print "Ver datos"
+    print "Editar datos de secretaria y Ver datos"
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
+    time.sleep(3)
     driver.save_screenshot("ver_before.jpg")
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_2", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_2").click()
+    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+    time.sleep(1)
+
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6").click()
+    time.sleep(2)
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
+    scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").click()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").clear()
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").send_keys(numero_de_telephono + Keys.ENTER)
+    time.sleep(4)
+
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
     time.sleep(3)
     driver.save_screenshot("ver_after.jpg")
+    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+    time.sleep(1)
 
     before = Image.open('ver_before.jpg')
     after = Image.open('ver_after.jpg')
@@ -3081,17 +3089,12 @@ def ManejoDeSecretarias(driver):
     os.remove(ver_after.jpg)
     '''
 
-    scroll("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08", driver)
-    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
-    time.sleep(3)
-
     print "Eliminar secretaria"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_2", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_2").click()
+    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6").click()
     scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
-    assert(secretaria_correo not in driver.page_source), "no se elimino"
-    time.sleep(2)
+    time.sleep(4)
 
 def ManejoDeMonedas(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
@@ -3105,13 +3108,13 @@ def ManejoDeMonedas(driver):
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
     all_options = element.find_elements_by_tag_name("option")
     for option in all_options:
-        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
+        if option.get_attribute("value") == "001Z000000VEOKDIA5":
             option.click()
             break
 
     print "Entrando a manejo de monedas"
-    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_4", driver)
-    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_4').click()
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_17", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_17').click()
     time.sleep(2)
     print "Agregando nuevo moneda"
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrear", driver)
@@ -3196,13 +3199,13 @@ def ManejoDeConfiguraciones(driver):
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ddlConsultorios")]')
     all_options = element.find_elements_by_tag_name("option")
     for option in all_options:
-        if option.get_attribute("value") == "001Z000001DjpNvIAJ":
+        if option.get_attribute("value") == "001Z000000VEOKDIA5":
             option.click()
             break
 
     print "Entrando a manejo de configuraciones"
-    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_4", driver)
-    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_4').click()
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_3", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_3').click()
     time.sleep(2)
 
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
@@ -3218,9 +3221,9 @@ def ManejoDeConfiguraciones(driver):
         if option.get_attribute("value") == "Secretaria":
             option.click()
             break
-
+    time.sleep(2)
     driver.save_screenshot("mc_ver_before.jpg")
-    time.sleep(4)
+    time.sleep(2)
 
     print "Verificando los editos a manejo de configuraciones"
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
