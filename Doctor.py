@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.alert import Alert
 import time, unicodedata, sys, getopt
 import random
 import os
@@ -3539,6 +3540,13 @@ def manejoDoctores(driver):
 
     time.sleep(3)
     driver.refresh()
+
+    try:
+        Alert(driver).accept()
+        time.sleep(6)
+    except:
+        pass
+
     time.sleep(3)
     doctores = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_liDoctores"]/a/span')
     doctores.click()
@@ -3671,6 +3679,11 @@ def manejoDoctores(driver):
 
     time.sleep(3)
     driver.refresh()
+    try:
+        Alert(driver).accept()
+        time.sleep(6)
+    except:
+        pass
     time.sleep(3)
     doctores = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_liDoctores"]/a/span')
     doctores.click()

@@ -2280,7 +2280,7 @@ def emailCitaProgramada(driver, ambiente):
 
     print " Buscando email.."
     search = driver.find_element_by_id('gbqfq')
-    search.send_keys('Su cita medica' + Keys.RETURN)
+    search.send_keys(u'Su cita médica es hoy' + Keys.RETURN)
 
     time.sleep(5)
 
@@ -2325,7 +2325,7 @@ def emailCitaProgramada(driver, ambiente):
     else:
         sys.exit(-1)
 
-    time.sleep(5)
+    time.sleep(7)
 
     assert 'Cita' in driver.title, 'Not entered in la cita'
 
