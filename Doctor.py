@@ -501,7 +501,7 @@ def main(argv):
 
                 elif modulo == "AppLogEmails":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, "consultas") == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: App Log Emails"
@@ -3012,6 +3012,26 @@ def ManejoDeSecretarias(driver):
             option.click()
             break
 
+    print "Making sure Secre3 Pruebas not in current consultorio"
+    if "Secre3 Pruebas" in driver.page_source:
+        if "cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5" in driver.page_source:
+            driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5").click()
+            scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5", driver)
+            driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
+        elif "cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6" in driver.page_source:
+            driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5").click()
+            scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5", driver)
+            driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
+        time.sleep(5)
+
+
+    driver.refresh()
+    scroll("cphW_ucmicuentadoctor_liSecretarias", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_liSecretarias").click()
+    time.sleep(1)
+
+    assert("Secre3 Pruebas" not in driver.page_source), "Secre3 Pruebas no debe estar en el consultorio"
+
     scroll("cphW_ucmicuentadoctor_ctl34_btnBuscar", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnBuscar").click()
     time.sleep(3)
@@ -3209,12 +3229,18 @@ def ManejoDeMonedas(driver):
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrear").click()
     time.sleep(3)
 
+    '''
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_ddlMoneda")]')
     all_options = element.find_elements_by_tag_name("option")
     for option in all_options:
         if option.get_attribute("value") == "USD":
             option.click()
             break
+    '''
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_ddlMoneda")]').click()
+    element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_ddlMoneda")]').send_keys(Keys.DOWN + Keys.ENTER)
+
+
 
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_txtPrecioConsulta", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_ucCreate_txtPrecioConsulta").send_keys("3")
@@ -3222,6 +3248,9 @@ def ManejoDeMonedas(driver):
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda").click()
     time.sleep(3)
+
+    if "cphW_ucmicuentadoctor_ctl32_ctl06_btnCrearMoneda" in driver.page_source:
+        assert(False), "No hay mas monedas para agregar"
 
     print "Verificando los botones 'ver' y 'editar'"
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_1", driver)
@@ -3620,7 +3649,7 @@ def manejoDoctores(driver):
     assert "Demo AS" in driver.page_source, "Doctor not added"
 
 
-    print " Registrando doctor neuvo.."
+    print " Registrando doctor nuevo.."
     time.sleep(3)
     agregarDoctor = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_btnBuscar"]/span')
     agregarDoctor.click()
@@ -3695,7 +3724,7 @@ def manejoDoctores(driver):
     assert nombre in driver.page_source, 'New Doctor not registered'
 
 
-    print " Editando informacion de doctor neuvo.."
+    print " Editando informacion de doctor nuevo.."
 
     time.sleep(6)
     ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_15')
