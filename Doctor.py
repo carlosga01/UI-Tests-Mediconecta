@@ -532,7 +532,10 @@ def log_in(email, pw, driver, ambiente):
 
     driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
     driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
-    time.sleep(15)
+    time.sleep(10)
+
+    if "chrome" not in str(driver):
+        time.sleep(6)
 
     if "Terminos" in driver.current_url:
         scroll("cphW_btnAceptar", driver)
@@ -3032,11 +3035,9 @@ def ManejoDeSecretarias(driver):
 
     #first name
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtNombre']").send_keys(paciente)
     #last name
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtApellido']").send_keys(paciente_apellido)
     #Nacionalidad
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlNacionalidad")]')
@@ -3047,33 +3048,29 @@ def ManejoDeSecretarias(driver):
             break
     #Cedula
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCedula']").send_keys(cedula)
     #fecha de nacimiento
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia", driver)
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlDia']").send_keys("1" + Keys.ENTER)
-    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes", driver)
+    #scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes", driver)
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlMes']").send_keys("1" + Keys.ENTER)
-    scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno", driver)
+    #scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno", driver)
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ucFecha_ddlAnno']").send_keys("1" + Keys.ENTER)
     #sexo
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_ddlSexo']").send_keys("M" + Keys.ENTER)
     #telephono
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtCelular']").send_keys(numero_de_telephono)
     #correo electronico
     scroll("cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail", driver)
-    driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail']").click()
     driver.find_element_by_xpath("//*[@id='cphW_ucmicuentadoctor_ctl34_ctl06_ucDatosSecretaria_txtEmail']").send_keys(correo_e + Keys.ENTER)
 
     time.sleep(5)
-    assert(paciente_apellido in driver.page_source), "no se registro"
+    assert("Secre4 Taria" in driver.page_source), "no se registro"
 
 
     print "Testing Agregar Secretaria"
@@ -3094,51 +3091,98 @@ def ManejoDeSecretarias(driver):
     time.sleep(3)
     assert("Secre3" in driver.page_source), "No agrego secretaria"
 
-    print "Editar datos de secretaria y Ver datos"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
-    time.sleep(3)
-    driver.save_screenshot("ver_before.jpg")
-    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
-    time.sleep(1)
+    if "cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6" in driver.page_source:
+        print "Editar datos de secretaria y Ver datos"
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
+        time.sleep(3)
+        driver.save_screenshot("ver_before.jpg")
+        driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+        time.sleep(1)
 
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6").click()
-    time.sleep(2)
-    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
-    scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").click()
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").clear()
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").send_keys(numero_de_telephono + Keys.ENTER)
-    time.sleep(4)
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_6").click()
+        time.sleep(2)
+        numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
+        scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").click()
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").clear()
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").send_keys(numero_de_telephono + Keys.ENTER)
+        time.sleep(4)
 
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
-    time.sleep(3)
-    driver.save_screenshot("ver_after.jpg")
-    driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
-    time.sleep(1)
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_6").click()
+        time.sleep(3)
+        driver.save_screenshot("ver_after.jpg")
+        driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+        time.sleep(1)
 
-    before = Image.open('ver_before.jpg')
-    after = Image.open('ver_after.jpg')
-    if list(before.getdata()) == list(after.getdata()):
-        assert(False), "Did not go to the right page"
-    else:
-        pass
+        before = Image.open('ver_before.jpg')
+        after = Image.open('ver_after.jpg')
+        if list(before.getdata()) == list(after.getdata()):
+            assert(False), "Did not go to the right page"
+        else:
+            pass
 
-    #### if you wish to remove images from folder, uncomment following lines:###
-    '''
-    os.remove(ver_before.jpg)
-    os.remove(ver_after.jpg)
-    '''
+        #### if you wish to remove images from folder, uncomment following lines:###
+        '''
+        os.remove(ver_before.jpg)
+        os.remove(ver_after.jpg)
+        '''
 
-    print "Eliminar secretaria"
-    scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6").click()
-    scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
-    time.sleep(4)
+        print "Eliminar secretaria"
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6").click()
+        scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
+        time.sleep(4)
+    elif "cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_5" in driver.page_source:
+        print "Editar datos de secretaria y Ver datos"
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_5", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_5").click()
+        time.sleep(3)
+        driver.save_screenshot("ver_before.jpg")
+        driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+        time.sleep(1)
+
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_5", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEditar_5").click()
+        time.sleep(2)
+        numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        numero_de_telephono = random.choice(numbers) + random.choice(numbers) + random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)+ random.choice(numbers)
+        scroll("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").click()
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").clear()
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_ucDatosSecretaria_txtCelular").send_keys(numero_de_telephono + Keys.ENTER)
+        time.sleep(4)
+
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_5", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnVer_5").click()
+        time.sleep(3)
+        driver.save_screenshot("ver_after.jpg")
+        driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl34$ctl08").click()
+        time.sleep(1)
+
+        before = Image.open('ver_before.jpg')
+        after = Image.open('ver_after.jpg')
+        if list(before.getdata()) == list(after.getdata()):
+            assert(False), "Did not go to the right page"
+        else:
+            pass
+
+        #### if you wish to remove images from folder, uncomment following lines:###
+        '''
+        os.remove(ver_before.jpg)
+        os.remove(ver_after.jpg)
+        '''
+
+        print "Eliminar secretaria"
+        scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5").click()
+        scroll("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria", driver)
+        driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
+        time.sleep(4)
 
 def ManejoDeMonedas(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
