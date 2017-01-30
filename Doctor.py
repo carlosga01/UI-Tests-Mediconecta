@@ -306,6 +306,7 @@ def main(argv):
 
                     print "Proceso: Atender Paciente con DPE"
                     AtenderPacienteConDPE('a0HZ0000007gYqP', driver)
+                    time.sleep(2)
 
                     print " Cita --> OK"
                     time.sleep(3)
@@ -314,7 +315,7 @@ def main(argv):
 
                 elif modulo == "ProgramarCitaGalen":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -324,7 +325,7 @@ def main(argv):
 
                 elif modulo == "ProgramarCitaGalenMinor":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -334,7 +335,7 @@ def main(argv):
 
                 elif modulo == "ProgramarCitaGalenRegMinor":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -344,7 +345,7 @@ def main(argv):
 
                 elif modulo == "DoctorProgramarCitaMinorRegRep":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -354,7 +355,7 @@ def main(argv):
 
                 elif modulo == "DoctorProgramarCitaPaciente":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in("demoas@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -407,7 +408,7 @@ def main(argv):
 
                 elif modulo == "ProgramarCitaGalenNuevoP":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -417,7 +418,7 @@ def main(argv):
 
                 elif modulo == "DoctorProgramarCitaMinorCont":
                     print "Autenticando doctor: " + doctor
-                    assert (log_in("demoas@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Doctor Programar Cita"
@@ -462,6 +463,8 @@ def main(argv):
                     ManejoDeSecretarias(driver)
                     print "Menejo de Secretarias --> OK"
 
+                    driver.quit
+
                 elif modulo == "ManejoDeMonedas":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -470,6 +473,8 @@ def main(argv):
                     print "Proceso: Manejo de monedas"
                     ManejoDeMonedas(driver)
                     print "Menejo de monedas --> OK"
+
+                    driver.quit
 
                 elif modulo == "ManejoDeConfiguraciones":
                     print "Autenticando doctor: " + doctor
@@ -480,6 +485,8 @@ def main(argv):
                     ManejoDeConfiguraciones(driver)
                     print "Menejo de Configuraciones --> OK"
 
+                    driver.quit
+
                 elif modulo == "AppAtencionAlCliente":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -488,6 +495,8 @@ def main(argv):
                     print "Proceso: App Atencion al Cliente"
                     AppAtencionAlCliente(driver)
                     print "App Atencion al Cliente --> OK"
+
+                    driver.quit
 
                 elif modulo == "AppLogEmails":
                     print "Autenticando doctor: " + doctor
@@ -498,15 +507,19 @@ def main(argv):
                     AppLogEmails(driver)
                     print "App Log Emails --> OK"
 
+                    driver.quit
+
                 elif modulo == 'ManejoDoctores':
 
                     print "Autenticando doctor: " + doctor
-                    assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
                     print " Autenticacion --> OK"
 
                     print "Proceso: Manejo de Doctores"
                     manejoDoctores(driver)
                     print "Manejo de Doctores --> OK"
+
+                    driver.quit
 
                 print "== Pruebas del doctor finalizadas =="
 
@@ -518,7 +531,6 @@ def log_in(email, pw, driver, ambiente):
 
     driver.find_element_by_id("cphW_txtUsuario").send_keys(email)
     driver.find_element_by_id("cphW_txtPassword").send_keys(pw + Keys.RETURN)
-
     time.sleep(15)
 
     if "Terminos" in driver.current_url:
@@ -574,6 +586,8 @@ def AtenderPaciente(paciente, driver):
         print " Seleccionando Paciente en Fila"
         botonAtender = driver.execute_script("var trPaciente = document.getElementById('" + paciente + "'); return trPaciente.lastElementChild.lastElementChild;");
         botonAtender.click()
+        time.sleep(11)
+
     else:
         print " No hay pacientes en Fila"
         sys.exit(1)
@@ -587,7 +601,6 @@ def AtenderPaciente(paciente, driver):
     #        #list_to_eliminate = ["cphW_ucHistoriaMedicaDoctor_ctl03_rptTable_btnEliminar_0", "cphW_ucHistoriaMedicaDoctor_ctl03_btnEliminarModal"]
     #        testing_different_inputs(diagnostico, 'CEFALEA', '', None, "Definitive", driver)
     #        print " diagnostico --> OK"
-
 
     if "GUARDAR Y SALIR" in driver.page_source:
         scroll("cphW_btnGuardarCita", driver)
@@ -666,6 +679,7 @@ def AtenderPaciente(paciente, driver):
 
             if "Ir a fila de paciente" in driver.page_source:
                 print " Redireccionando a Fila de Pacientes"
+                time.sleep(5)
                 scroll("cphW_btnIrAfiladePaciente", driver)
                 driver.find_element_by_id("cphW_btnIrAfiladePaciente").click()
 
@@ -904,19 +918,34 @@ def CitaODTokbox(driver, ambiente, atender):
     else:
         scroll("cphW_uccitasondemand_btnSolicitarCita", driver)
         driver.find_element_by_id("cphW_uccitasondemand_btnSolicitarCita").click()
-    time.sleep(10)
+
+    time.sleep(6)
+
+    if "cphW_uccitasondemand_ddlDependientes" in driver.page_source:
+        element = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasondemand_ddlDependientes")]')
+        all_options = element.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute("value") == "a0HZ0000007gYqP":
+                option.click()
+                time.sleep(1)
+                driver.find_element_by_id('cphW_uccitasondemand_btnAceptar').click()
+                break
+    elif "cphW_uccitasondemand_upCitasOnDemandModalBody" in driver.page_source:
+        scroll('cphW_uccitasondemand_rblParaQuien_0',driver)
+        driver.find_element_by_id('cphW_uccitasondemand_rblParaQuien_0').click()
+        time.sleep(1)
+        driver.find_element_by_id('cphW_uccitasondemand_btnContinuarDep').click()
+        time.sleep(3)
+
     print " Solicitar cita --> OK"
 
+
+    ### Dont really understand why the following is in here, what does it do?###
+    ###commented out because it found the if but could not find the id###
     '''
     if "son personales y generan un historial" or "Medical consultations are personal and create a medical history" in driver.page_source:
-        print "1"
-        time.sleep(5)
         scroll("uniform-cphW_uccitasondemand_rblParaQuien_0", driver)
-        print "2"
-        time.sleep(5)
         driver.find_element_by_id("uniform-cphW_uccitasondemand_rblParaQuien_0").click()
-        print "3"
-        time.sleep(5)
         scroll("cphW_uccitasondemand_btnContinuarDep", driver)
         driver.find_element_by_id("cphW_uccitasondemand_btnContinuarDep").click()
         print " Seleccionar Paciente --> OK"
@@ -957,13 +986,12 @@ def historiaCitas(paciente, driver):
         print " No hay pacientes en Fila"
         sys.exit(1)
 
-    time.sleep(3)
+    time.sleep(6)
     print "Chequeando la historia de citas del paciente.."
     print " Drop down selection"
     dropDown = driver.find_element_by_id("ddlPHRdoc")
     dropDown.click()
-    assert("dropdown-backdrop" in driver.page_source), "Did not open dropdown"
-    time.sleep(2)
+    time.sleep(1)
 
     print " Historico Citas selection"
     historiaTab = driver.find_element_by_xpath("//*[@id='cphW_ucHistoriaMedicaDoctor_liHistoricoCitas']/a")
@@ -1378,15 +1406,17 @@ def Diagnostico(driver):
         assert(u"Nuevo Diagnóstico" in driver.page_source or "New Diagnosis" in page_source), u"Not on the New Diagnosis page"
 
         scroll("s2id_autogen3", driver)
-        driver.find_element_by_xpath("//*[@id='s2id_autogen3']").click()
-        driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys("sarampionf")
-        time.sleep(1)
+        #driver.find_element_by_xpath("//*[@id='s2id_autogen3']").click()
+        driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys("sarampion")
+        time.sleep(2)
         driver.find_element_by_xpath("//*[@id='s2id_autogen3']").send_keys(Keys.ENTER)
 
+        time.sleep(2)
         scroll("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus", driver)
-        driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus").click()
+        #driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus").click()
         driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_ucCreate_ddlEstatus").send_keys("p")
 
+        time.sleep(2)
         scroll("cphW_ucSoap_ucAssesment_ctl00_btnCrearDiagnostico", driver)
         driver.find_element_by_id("cphW_ucSoap_ucAssesment_ctl00_btnCrearDiagnostico").click()
 
@@ -1406,10 +1436,11 @@ def Prescripciones(driver):
 
         if "s2id_autogen5" in driver.page_source:
             scroll("s2id_autogen5", driver)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen5']").click()
+            #driver.find_element_by_xpath("//*[@id='s2id_autogen5']").click()
             driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys("escalol")
-            time.sleep(1)
+            time.sleep(2)
             driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys(Keys.ENTER)
+            time.sleep(2)
 
 
             scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
@@ -1420,10 +1451,11 @@ def Prescripciones(driver):
             time.sleep(5)
         elif "s2id_autogen11" in driver.page_source:
             scroll("s2id_autogen11", driver)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
+            #driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
             driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys("escalol")
-            time.sleep(1)
+            time.sleep(2)
             driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
+            time.sleep(2)
 
 
             scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
@@ -1443,9 +1475,10 @@ def Examenes(driver):
         assert(u"Nuevo Examen" in driver.page_source or "New Lab Test" in page_source), u"Not on the New Lab Test page"
 
         scroll("cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre", driver)
-        driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").click()
+        #driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").click()
         driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").send_keys("TEST1")
         driver.find_element_by_xpath("//*[@id='cphW_ucSoap_ucPlan_ctl01_ucCreate_txtNombre']").send_keys(Keys.ENTER)
+        time.sleep(3)
 
         scroll("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen", driver)
         driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen").click()
@@ -1460,6 +1493,7 @@ def AtenderPacienteConDPE(paciente, driver):
         print " Seleccionando Paciente en Fila"
         botonAtender = driver.execute_script("var trPaciente = document.getElementById('" + paciente + "'); return trPaciente.lastElementChild.lastElementChild;");
         botonAtender.click()
+        time.sleep(11)
     else:
         print " No hay pacientes en Fila"
         sys.exit(1)
@@ -2325,11 +2359,12 @@ def DoctorProgramarCitaRegMinor(driver):
                 scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo", driver)
                 driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").click()
                 driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys("M")
-                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
+                #driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
                 #Registrar
-                scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
-                driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
-                print "Nuevo independiente registrado"
+                if "hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente" in driver.page_source:
+                    scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
+                    driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
+                    print "Nuevo independiente registrado"
                 time.sleep(5)
             else:
                 print "No encontro boton para registar dependiente"
@@ -2538,11 +2573,10 @@ def DoctorProgramarCitaMinorRegRep(driver):
                 scroll("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo", driver)
                 driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").click()
                 driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys("M")
-                driver.find_element_by_xpath("//*[@id='cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_ucRegistroPacienteDr_ddlSexo']").send_keys(Keys.ENTER)
                 #Registrar
                 scroll("hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente", driver)
                 driver.find_element_by_xpath("//*[@id='hab_ctl00$cphW$uccitasprogramadasdr$ucBuscarPacientesCitaDoctor$btnCrearPaciente']").click()
-                print "Nuevo independiente registrado"
+                print "Nuevo dependiente registrado"
                 time.sleep(5)
             else:
                 print "Not on the right page"
@@ -2948,10 +2982,10 @@ def DatosdelConsultorio(driver):
     scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").click()
     driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").clear()
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").send_keys(numero_de_telephono)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_ucRegistrarConsultorioEditar_txtTelefono").send_keys(numero_de_telephono + Keys.TAB)
+    time.sleep(2)
 
     scroll("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
     driver.find_element_by_id("cphW_ucmicuentadoctor_ucDatosConsultorio_btnGuardarDatosConsultorio").click()
     time.sleep(4)
 
@@ -3122,8 +3156,8 @@ def ManejoDeMonedas(driver):
             break
 
     print "Entrando a manejo de monedas"
-    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_17", driver)
-    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_17').click()
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_0", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnMonedas_0').click()
     time.sleep(2)
     print "Agregando nuevo moneda"
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnCrear", driver)
@@ -3145,8 +3179,8 @@ def ManejoDeMonedas(driver):
     time.sleep(3)
 
     print "Verificando los botones 'ver' y 'editar'"
-    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0").click()
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_1", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_1").click()
     time.sleep(3)
     driver.save_screenshot("mm_ver_before.jpg")
 
@@ -3154,8 +3188,8 @@ def ManejoDeMonedas(driver):
     driver.find_element_by_id("hab_ctl00$cphW$ucmicuentadoctor$ctl32$ctl06$ctl13").click()
     time.sleep(3)
 
-    scroll('cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_0', driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_0").click()
+    scroll('cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_1', driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEditar_1").click()
     time.sleep(3)
 
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_ucRU_txtPrecioConsulta", driver)
@@ -3166,8 +3200,8 @@ def ManejoDeMonedas(driver):
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnEditarMoneda").click()
     time.sleep(2)
 
-    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_0").click()
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_1", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnVer_1").click()
     time.sleep(3)
     driver.save_screenshot("mm_ver_after.jpg")
 
@@ -3189,12 +3223,12 @@ def ManejoDeMonedas(driver):
     time.sleep(2)
 
     print "Eliminado moneda"
-    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_0",driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_0").click()
+    scroll("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_1",driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_rptTable_btnEliminar_1").click()
     time.sleep(1)
     scroll("cphW_ucmicuentadoctor_ctl32_ctl06_btnEliminarModal", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnEliminarModal").click()
-    time.sleep(1)
+    time.sleep(4)
 
 def ManejoDeConfiguraciones(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
@@ -3215,7 +3249,7 @@ def ManejoDeConfiguraciones(driver):
     print "Entrando a manejo de configuraciones"
     scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5", driver)
     driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5').click()
-    time.sleep(2)
+    time.sleep(5)
 
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
     all_options = element.find_elements_by_tag_name("option")
@@ -3230,9 +3264,16 @@ def ManejoDeConfiguraciones(driver):
         if option.get_attribute("value") == "Secretaria":
             option.click()
             break
-    time.sleep(2)
+
+    scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
+    time.sleep(3)
+
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5').click()
+    time.sleep(5)
     driver.save_screenshot("mc_ver_before.jpg")
-    time.sleep(2)
+
 
     print "Verificando los editos a manejo de configuraciones"
     element = driver.find_element_by_xpath('//*[(@id = "cphW_ucmicuentadoctor_ctl32_ucConfiguracion_ddlAvisosPacienteEnFila")]')
@@ -3249,6 +3290,13 @@ def ManejoDeConfiguraciones(driver):
             option.click()
             break
 
+    scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
+    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
+    time.sleep(3)
+
+    scroll("cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5", driver)
+    driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnConfiguracion_5').click()
+    time.sleep(5)
     driver.save_screenshot("mc_ver_after.jpg")
 
     before = Image.open('mc_ver_before.jpg')
@@ -3263,10 +3311,6 @@ def ManejoDeConfiguraciones(driver):
     os.remove(mc_ver_before.jpg)
     os.remove(mc_ver_after.jpg)
     '''
-
-    scroll("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar", driver)
-    driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ucConfiguracion_btnGuardar").click()
-    time.sleep(3)
 
 def AppAtencionAlCliente(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-AtencionAlCliente", " " ))]').click()
@@ -3369,12 +3413,12 @@ def AppLogEmails(driver):
     os.remove(Rebotes.jpg)
     os.remove(Spam.jpg)
     '''
-    
+
     print "Checking the 'Mensajes' tab"
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-envelope", " " ))]').click()
     time.sleep(2)
     driver.save_screenshot("Original.jpg")
-    print "Checking email filter"
+    print " Checking email filter"
     #email
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[1]/div/input').send_keys("us1@mediconecta.com")
     time.sleep(2)
@@ -3387,7 +3431,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
-    print "Checking date filter"
+    print " Checking date filter"
     #dates
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[1]/span/input').send_keys("11/20/2016")
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div/div/span[3]/span/input').send_keys("12/24/2016")
@@ -3401,7 +3445,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
-    print "Checking category filter"
+    print " Checking category filter"
     #categoria
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[3]/div/span/span').click()
     time.sleep(1)
@@ -3418,7 +3462,7 @@ def AppLogEmails(driver):
     time.sleep(2)
     #Search and Erase buttons ^^^^
 
-    print "Checking event filter"
+    print " Checking event filter"
     #Evento
     driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div/div[2]/div[1]/div[4]/div/span/span').click()
     time.sleep(1)
@@ -3467,7 +3511,7 @@ def manejoDoctores(driver):
 
     dropDownName = driver.find_element_by_xpath('//*[@id="upLoginMaster"]/div/div')
     dropDownName.click()
-
+    time.sleep(2)
     miCuenta = driver.find_element_by_xpath('//*[@id="lbMiCuenta"]/span')
     miCuenta.click()
 
@@ -3544,7 +3588,7 @@ def manejoDoctores(driver):
 
     registarar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_btnRegistrar')
     registarar.click()
-    time.sleep(3)
+    time.sleep(5)
 
     name = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtNombre')
     name.send_keys(nombre)
@@ -3601,8 +3645,8 @@ def manejoDoctores(driver):
 
     print " Editando informacion de doctor neuvo.."
 
-    time.sleep(3)
-    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_16')
+    time.sleep(6)
+    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_15')
     ver.click()
 
     time.sleep(3)
@@ -3613,7 +3657,7 @@ def manejoDoctores(driver):
     cerrar.click()
     time.sleep(2)
 
-    editar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnEditar_16')
+    editar = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnEditar_15')
     editar.click()
     time.sleep(2)
 
@@ -3633,7 +3677,7 @@ def manejoDoctores(driver):
     time.sleep(3)
 
 
-    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_16')
+    ver = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_rptTable_btnVer_15')
     ver.click()
     time.sleep(5)
 
@@ -3654,7 +3698,7 @@ def manejoDoctores(driver):
     print " Eliminando doctor nuevo.."
 
     time.sleep(3)
-    trashCan = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_rptTable_btnEliminar_16"]/i')
+    trashCan = driver.find_element_by_xpath('//*[@id="cphW_ucmicuentadoctor_ctl32_rptTable_btnEliminar_15"]/i')
     trashCan.click()
     time.sleep(4)
     si = driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_btnEliminarDoctor")

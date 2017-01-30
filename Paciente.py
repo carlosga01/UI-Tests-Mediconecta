@@ -93,7 +93,6 @@ def main(argv):
                 print 'valores esperados: -d Chrome / Firefox / Ie'
                 sys.exit()
 
-
         elif opt in ("-a", "--a"):
             #Setear ambiente
             if arg == 'portaldev' or arg == 'testprod' or arg == 'consultas' or arg == 'mercantilseguros' or arg == 'mercantilsegurosdev':
@@ -118,7 +117,6 @@ def main(argv):
                 print 'valores esperados: -a portaldev / testprod / consultas / mercantilseguros / mercantilsegurosdev'
                 sys.exit()
 
-
         elif opt in ("-m", "--m"):
             #Setear modulo
             if arg == 'Login' or arg == 'ForzarCache' or arg == 'Autentica' or arg == 'CitaODVSee' or arg == 'CitaODVSeeGeneral' or arg == 'CitaODTokbox' or arg == 'ProgramarCitaGeneral' or arg == 'CitaODTokboxEsp' or arg == 'ProgramarCitaEspecial':
@@ -129,14 +127,14 @@ def main(argv):
                 modulo = arg
 
             else:
-                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades/SecretariaProgramarCita/SecretariaProgramarCitaMenor/AppContactos'
+                print 'valores esperados: -m Autentica/Login/CitaODVSee/CitaODVSeeGeneral/CitaODTokbox/CitaODTokboxAtender/CitaODTokboxGeneral/Phr/MiCuenta/SSO/ForzarCache/ProgramarCitaGeneral/ProgramarCitaEspecial/CitaODTokboxEsp/AppMisCitas/AtenderCitaProgramada/OpcionesSinEspecialidades/SecretariaProgramarCita/SecretariaProgramarCitaMenor/AppContactos/IrACitaPorEmail'
                 sys.exit()
 
             if ambiente != '':
                 if navegador == 'Chrome':
                     driver = webdriver.Chrome()
                     act_birthday = act_birthday_chrome
-                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada' or modulo == 'AppContactos':
+                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada' or modulo == 'AppContactos' or modulo == 'OpcionesSinEspecialidades':
                         paciente = username_chrome
                     else:
                         paciente = username_chrome_vsee
@@ -144,7 +142,7 @@ def main(argv):
                 elif navegador == 'Firefox':
                     driver = webdriver.Firefox()
                     act_birthday = act_birthday_firefox
-                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada' or modulo == 'AppContactos':
+                    if modulo == 'CitaODTokbox' or modulo == 'CitaODTokboxAtender' or modulo == 'CitaODTokboxGeneral' or modulo == 'ProgramarCitaEspecial' or modulo == 'CitaODTokboxEsp' or modulo == 'AtenderCitaProgramada' or modulo == 'AppContactos' or modulo == 'OpcionesSinEspecialidades':
                         paciente = username_firefox
                     else:
                         paciente = username_firefox_vsee
@@ -343,7 +341,7 @@ def main(argv):
 
                     print " Cita --> OK"
 
-                    time.sleep(3)
+                    time.sleep(5)
 
                     dr_driver.quit()
 
@@ -980,8 +978,27 @@ def CitaODTokbox(driver, ambiente, atender):
     else:
         scroll("cphW_uccitasondemand_btnSolicitarCita", driver)
         driver.find_element_by_id("cphW_uccitasondemand_btnSolicitarCita").click()
-    time.sleep(5)
+
+    time.sleep(6)
+
+    if "cphW_uccitasondemand_ddlDependientes" in driver.page_source:
+        element = driver.find_element_by_xpath('//*[(@id = "cphW_uccitasondemand_ddlDependientes")]')
+        all_options = element.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute("value") == "a0HZ0000007gYqP":
+                option.click()
+                time.sleep(1)
+                driver.find_element_by_id('cphW_uccitasondemand_btnAceptar').click()
+                break
+    elif "cphW_uccitasondemand_upCitasOnDemandModalBody" in driver.page_source:
+        scroll('cphW_uccitasondemand_rblParaQuien_0',driver)
+        driver.find_element_by_id('cphW_uccitasondemand_rblParaQuien_0').click()
+        time.sleep(1)
+        driver.find_element_by_id('cphW_uccitasondemand_btnContinuarDep').click()
+        time.sleep(3)
+
     print " Solicitar cita --> OK"
+
 
     ### Dont really understand why the following is in here, what does it do?###
     ###commented out because it found the if but could not find the id###
@@ -1293,6 +1310,7 @@ def AtenderPaciente(paciente, driver):
 
             if "Ir a fila de paciente" in driver.page_source:
                 print " Redireccionando a Fila de Pacientes"
+                time.sleep(2)
                 scroll("cphW_btnIrAfiladePaciente", driver)
                 driver.find_element_by_id("cphW_btnIrAfiladePaciente").click()
 
@@ -1300,12 +1318,12 @@ def AtenderPaciente(paciente, driver):
             print " Boton Continuar no encontrado"
 
 def FillEncuesta(driver):
-    time.sleep(5)
+    time.sleep(7)
     hay_encuesta = True
     assert ('cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source), "No se encontraron los botones para la encuesta"
 
     while hay_encuesta == True:
-        time.sleep(5)
+        time.sleep(6)
         if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
             if u"Qué le pareció la consulta" in driver.page_source:
                 option = random.randint(1,5)
@@ -1670,11 +1688,11 @@ def OpcionesSinEspecialidades(driver):
     time.sleep(3)
     site = 'portal'
 
-    if "PROGRAMAR CITA" in driver.page_source: #if login works
+    if "INICIAR VIDEO" in driver.page_source: #if login works
         site = 'hubsalud'
         lang = "spanish"
         print " Hub de Salud en Espanol"
-    elif "SCHEDULE E-VISIT" in driver.page_source: #if login works
+    elif "START VIDEO" in driver.page_source: #if login works
         site = 'hubsalud'
         lang = "english"
         print " Hub de Salud en Ingles"
@@ -2282,13 +2300,13 @@ def emailCitaProgramada(driver, ambiente):
     search = driver.find_element_by_id('gbqfq')
     search.send_keys('Su cita medica' + Keys.RETURN)
 
-    time.sleep(3)
+    time.sleep(5)
 
 
     click = ActionChains(driver).move_to_element_with_offset(search,222,112).click().perform()
 
     print " Entrando en el link.."
-    time.sleep(2)
+    time.sleep(6)
     links = driver.find_elements_by_partial_link_text('http://portaldev.mediconecta.com')
     links[-1].click()
 
@@ -2328,9 +2346,6 @@ def emailCitaProgramada(driver, ambiente):
     time.sleep(5)
 
     assert 'Cita' in driver.title, 'Not entered in la cita'
-
-
-
 
 start = time.time()
 main(sys.argv[1:])
