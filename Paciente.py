@@ -1325,34 +1325,16 @@ def FillEncuesta(driver):
     while hay_encuesta == True:
         time.sleep(6)
         if 'cphW_respuestasRepeater_btnRespuesta_0' in driver.page_source:
-            if u"Qué le pareció la consulta" in driver.page_source:
-                option = random.randint(1,5)
-                if option == 5:
-                    print " Seleccion: Me Gusto Mucho"
-                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_0').click()
-                elif option == 4:
-                    print " Seleccion: Me Gusto"
-                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_1').click()
-                elif option == 3:
-                    print " Seleccion: Normal"
-                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_2').click()
-                elif option == 2:
-                    print " Seleccion: No Me Gusto"
-                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_3').click()
-                elif option == 1:
-                    print " Seleccion: No Me Gusto Nada"
-                    driver.find_element_by_id('cphW_respuestasRepeater_btnRespuesta_4').click()
-            else:
-                current_num = 0
-                for i in range(1000):
-                    temp_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(i)
-                    if temp_id in driver.page_source:
-                        current_num = i
-                    else:
-                        break
-                option = random.randint(0,current_num)
-                new_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(option)
-                driver.find_element_by_id(new_id).click()
+            current_num = 0
+            for i in range(1000):
+                temp_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(i)
+                if temp_id in driver.page_source:
+                    current_num = i
+                else:
+                    break
+            option = random.randint(0,current_num)
+            new_id = 'cphW_respuestasRepeater_btnRespuesta_' + str(option)
+            driver.find_element_by_id(new_id).click()
 
 
             time.sleep(4)
