@@ -17,7 +17,14 @@ from selenium.webdriver.chrome.options import Options
 #from selenium.webdriver.common.alert import Alert
 import unicodedata, sys, getopt, time
 import random
+
+#pip install Pillow
+import PIL
+from PIL import Image
+
+#pip install datetime
 from datetime import datetime
+
 
 def main(argv):
     driver = ''
