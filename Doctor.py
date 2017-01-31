@@ -103,6 +103,8 @@ def main(argv):
                 modulo = arg
             elif arg == "reAgendarCancelarCita" or arg == "DoctorProgramarCitaMinorCont" or arg == "DatosdelConsultorio" or arg == "ManejoDeSecretarias" or arg == "ManejoDeMonedas" or arg == "ManejoDeConfiguraciones" or arg == "AppAtencionAlCliente" or arg == "AppLogEmails" or arg == 'ManejoDoctores':
                 modulo = arg
+            elif arg == 'AppFichasClinicas':
+                modulo = arg
             else:
                 print ('valores esperados: -m Autentica/Login/Atender/HistoriaCitas/Pruebas_de_Diagnostico/Pruebas_de_Prescripciones/Pruebas_de_Examenes/AtenderPacienteConDPE/ProgramarCitaGalen/ProgramarCitaGalenMinor/AppHistoriasClientes/ProgramarCitaGlenNuevoP/ProgramarCitaGalenRegMinor/'
                        'DoctorProgramarCitaMinorRegRep/DoctorProgramarCitaPaciente/reAgendarCancelarCita/DoctorProgramarCitaMinorCont/DatosdelConsultorio/ManejoDeSecretarias/ManejoDeMonedas/ManejoDeConfiguraciones/AppAtencionAlCliente/AppLogEmails'
@@ -544,6 +546,18 @@ def main(argv):
 
                     driver.quit
 
+                elif modulo == 'AppFichasClinicas':
+                    doctor = 'jenkins_clinica@mediconecta.com'
+
+                    print "Autenticando doctor: " + doctor
+                    assert (log_in(doctor, "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
+                    print " Autenticacion --> OK"
+
+                    print "Proceso: App Fichas Clinicas"
+                    appFichasClinicas(driver)
+                    print "App Fichas Clinicas --> OK"
+
+
                 print "== Pruebas del doctor finalizadas =="
 
 def log_in(email, pw, driver, ambiente):
@@ -569,6 +583,8 @@ def log_in(email, pw, driver, ambiente):
 
     time.sleep(8)
     if "filapacientes" in driver.current_url:
+        return "exitoso"
+    if "fichaspacientes" in driver.current_url:
         return "exitoso"
     if "no ha sido activada" in driver.page_source:
         return "inactivo"
@@ -3838,6 +3854,107 @@ def manejoDoctores(driver):
     si = driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_btnEliminarDoctor")
     si.click()
     time.sleep(3)
+
+def appFichasClinicas(driver):
+    time.sleep(3)
+    assert u'Fichas Clínicas' in driver.title, 'No en app Fichas Clinicas'
+
+    driver.find_element_by_id('cphW_ucfichaspacientes_ctl00_txtBusqueda').send_keys('Pruebas Jenkins Chrome VSee' + Keys.RETURN)
+    time.sleep(3)
+
+    driver.find_element_by_id('cphW_ucfichaspacientes_ctl00_rptTable_btnPHR_0').click()
+
+    assert u'Historias Médicas' in driver.page_source, 'No en el tab de Historias Medicas'
+
+    driver.save_screenshot('HistoriaMedica.jpg')
+
+    print " Probando las opciones de Historia Medica"
+    element = driver.find_element_by_xpath('//*[@id="cphW_ucfichaspacientes_ucHistoriaMedica_lihistoriamedica"]/ul')
+    all_options = element.find_elements_by_tag_name("a")
+
+    i = 10
+    driver.save_screenshot('shotA.jpg')
+    imgA = Image.open('shotA.jpg')
+    for option in all_options:
+        option.click()
+        time.sleep(2)
+
+        driver.save_screenshot('shotB.jpg')
+
+        imgB = Image.open('shotB.jpg')
+
+        if i == 10:
+            continue
+        else:
+            if list(imgA.getdata()) == list(imgB.getdata()):
+                assert False, " Nothing changed"
+
+        imgA = Image.open('shotB.jpg')
+        i += 1
+
+
+
+    driver.find_element_by_id('cphW_ucfichaspacientes_ucHistoriaMedica_Label1').click()
+    time.sleep(2)
+
+    driver.save_screenshot('HistoricoCitas.jpg')
+    img1 = Image.open('HistoriaMedica.jpg')
+    img2 = Image.open('HistoricoCitas.jpg')
+
+    print " Entrando en Historico de Citas"
+    if list(img1.getdata()) == list(img2.getdata()):
+        assert (False), 'Boton "Historico de Citas" no trabajo'
+
+
+    print " Probando la busqueda"
+    driver.find_element_by_xpath('//*[@id="listado-HCitas_filter"]/label/input').send_keys('01-05')
+    time.sleep(2)
+    driver.save_screenshot('buscar.jpg')
+
+    img5 = Image.open('buscar.jpg')
+    if list(img2.getdata()) == list(img5.getdata()):
+        assert False, ' No trabajo buscar'
+
+    driver.find_element_by_xpath('//*[@id="listado-HCitas_filter"]/label/input').clear()
+    driver.find_element_by_xpath('//*[@id="listado-HCitas_filter"]/label/input').send_keys(Keys.RETURN)
+
+    print " Probando el boton 'Ver'"
+    time.sleep(4)
+    driver.find_element_by_xpath('//*[@id="cphW_ucfichaspacientes_ucHistoriaMedica_ctl28_rptTable_btnVer_1"]/i').click()
+    time.sleep(7)
+
+    driver.save_screenshot('ver.jpg')
+
+    img3 = Image.open('ver.jpg')
+
+    if list(img2.getdata()) == list(img3.getdata()):
+        assert (False), ' No pudo ver la informcion de la cita mas reciente'
+
+
+    driver.find_element_by_xpath('//*[@id="cphW_ucfichaspacientes_ucHistoriaMedica_ctl28_ucDetalleCitaHistoriaMedica_btnRegresarCitaHistoria"]/i').click()
+    time.sleep(3)
+
+
+    print " Entrando en prescripciones"
+    driver.find_element_by_id('cphW_ucfichaspacientes_ucHistoriaMedica_Label2').click()
+    time.sleep(3)
+
+    driver.save_screenshot('prescrip.jpg')
+    img4 = Image.open('prescrip.jpg')
+
+    if list(img3.getdata()) == list(img4.getdata()):
+        assert False, " No pudo entrar el la pantalla de prescripciones"
+
+
+
+
+
+
+
+
+
+
+
 
 start = time.time()
 main(sys.argv[1:])
