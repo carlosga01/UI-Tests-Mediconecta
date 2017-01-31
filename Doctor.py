@@ -1229,10 +1229,7 @@ def Pruebas_de_Prescripciones(paciente, driver):
 
                 scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
                 driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
-                assert("ESCALOL" in driver.page_source), "Perscription did not save"
 
-                print "Agregar Prescripciones --> OK"
-                time.sleep(5)
             elif "s2id_autogen11" in driver.page_source:
                 scroll("s2id_autogen11", driver)
                 driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
@@ -1240,14 +1237,13 @@ def Pruebas_de_Prescripciones(paciente, driver):
                 time.sleep(1)
                 driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
 
-
                 scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
                 driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
-            assert("ESCALOL" in driver.page_source), "Perscription did not save"
 
-            print "Agregar Prescripciones --> OK"
-            time.sleep(5)
-
+        time.sleep(3)
+        assert("ESCALOL" in driver.page_source), "Perscription did not save"
+        print "Agregar Prescripciones --> OK"
+        time.sleep(3)
         print " Guardando cita"
         scroll("cphW_btnGuardarCita", driver)
         driver.find_element_by_id("cphW_btnGuardarCita").click()
@@ -1361,9 +1357,11 @@ def Pruebas_de_Examenes(paciente, driver):
 
             scroll("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen", driver)
             driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl01_btnCrearExamen").click()
-            assert("TEST1" in driver.page_source), "New lab test did not save"
-            print "Agregar Examenes --> OK"
-            time.sleep(5)
+
+        time.sleep(3)
+        assert("TEST1" in driver.page_source), "New lab test did not save"
+        print "Agregar Examenes --> OK"
+        time.sleep(2)
 
         print " Guardando cita"
         scroll("cphW_btnGuardarCita", driver)
@@ -3712,7 +3710,7 @@ def manejoDoctores(driver):
     phone.send_keys('3053053055')
 
     email = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtEmail')
-    email.send_keys(nombre + apellido + "@gmail.com")
+    email.send_keys(nombre + apellido + "@mediconecta.com")
 
     title = driver.find_element_by_id('cphW_ucmicuentadoctor_ctl32_ctl08_ucDatosDoctor_txtTituloUniversitario')
     title.send_keys('Test Doctor')
