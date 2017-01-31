@@ -536,6 +536,8 @@ def log_in(email, pw, driver, ambiente):
 
     if "chrome" not in str(driver):
         time.sleep(6)
+        if ambiente == "consultas":
+            time.sleep(15)
 
     if "Terminos" in driver.current_url:
         scroll("cphW_btnAceptar", driver)
@@ -1149,7 +1151,7 @@ def Pruebas_de_Diagnostico(paciente, driver):
                 scroll("cphW_btnGuardarCita", driver)
                 driver.find_element_by_id("cphW_btnGuardarCita").click()
                 time.sleep(5)
-
+            time.sleep(10)
             if "Ir a fila de paciente" in driver.page_source:
                 print " Redireccionando a Fila de Pacientes"
                 scroll("cphW_btnIrAfiladePaciente", driver)
@@ -1211,30 +1213,36 @@ def Pruebas_de_Prescripciones(paciente, driver):
             scroll("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico", driver)
             driver.find_element_by_id("cphW_ucSoap_ucPlan_ucIndicaciones_txtInformeMedico").send_keys("informe medico automatizado jenkins")
 
-        if "s2id_autogen5" in driver.page_source:
-            scroll("s2id_autogen5", driver)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen5']").click()
-            driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys("escalol")
-            time.sleep(1)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys(Keys.ENTER)
+        if "cphW_ucSoap_ucPlan_ctl00_btnCrear" in driver.page_source:
+            print "Agregar Prescripciones"
+            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrear", driver)
+            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrear").click()
+            assert(u"Nueva Prescripción" in driver.page_source or "New Prescription" in page_source), u"Not on the New Prescription page"
+
+            if "s2id_autogen5" in driver.page_source:
+                scroll("s2id_autogen5", driver)
+                driver.find_element_by_xpath("//*[@id='s2id_autogen5']").click()
+                driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys("escalol")
+                time.sleep(1)
+                driver.find_element_by_xpath("//*[@id='s2id_autogen5']").send_keys(Keys.ENTER)
 
 
-            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
-            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
-            assert("ESCALOL" in driver.page_source), "Perscription did not save"
+                scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
+                driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
+                assert("ESCALOL" in driver.page_source), "Perscription did not save"
 
-            print "Agregar Prescripciones --> OK"
-            time.sleep(5)
-        elif "s2id_autogen11" in driver.page_source:
-            scroll("s2id_autogen11", driver)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
-            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys("escalol")
-            time.sleep(1)
-            driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
+                print "Agregar Prescripciones --> OK"
+                time.sleep(5)
+            elif "s2id_autogen11" in driver.page_source:
+                scroll("s2id_autogen11", driver)
+                driver.find_element_by_xpath("//*[@id='s2id_autogen11']").click()
+                driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys("escalol")
+                time.sleep(1)
+                driver.find_element_by_xpath("//*[@id='s2id_autogen11']").send_keys(Keys.ENTER)
 
 
-            scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
-            driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
+                scroll("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion", driver)
+                driver.find_element_by_id("cphW_ucSoap_ucPlan_ctl00_btnCrearPrescripcion").click()
             assert("ESCALOL" in driver.page_source), "Perscription did not save"
 
             print "Agregar Prescripciones --> OK"
@@ -1278,6 +1286,7 @@ def Pruebas_de_Prescripciones(paciente, driver):
                 driver.find_element_by_id("cphW_btnGuardarCita").click()
                 time.sleep(5)
 
+            time.sleep(10)
             if "Ir a fila de paciente" in driver.page_source:
                 print " Redireccionando a Fila de Pacientes"
                 scroll("cphW_btnIrAfiladePaciente", driver)
@@ -1393,7 +1402,7 @@ def Pruebas_de_Examenes(paciente, driver):
                 scroll("cphW_btnGuardarCita", driver)
                 driver.find_element_by_id("cphW_btnGuardarCita").click()
                 time.sleep(5)
-
+            time.sleep(10)
             if "Ir a fila de paciente" in driver.page_source:
                 print " Redireccionando a Fila de Pacientes"
                 scroll("cphW_btnIrAfiladePaciente", driver)
@@ -3012,25 +3021,28 @@ def ManejoDeSecretarias(driver):
             option.click()
             break
 
-    print "Making sure Secre3 Pruebas not in current consultorio"
+    print " Verificando que Secre3 Pruebas no esta en el consultorio"
     if "Secre3 Pruebas" in driver.page_source:
         if "cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5" in driver.page_source:
+            print "Se encontro Secre3 Pruebas, Eliminando..."
             driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5").click()
             scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5", driver)
             driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
         elif "cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_6" in driver.page_source:
+            print "Se encontro Secre3 Pruebas, Eliminando..."
             driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5").click()
             scroll("cphW_ucmicuentadoctor_ctl34_rptTable_btnEliminar_5", driver)
             driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
         time.sleep(5)
-
+    else:
+        print " Secre3 Pruebas no esta en el consultorio"
 
     driver.refresh()
     scroll("cphW_ucmicuentadoctor_liSecretarias", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_liSecretarias").click()
     time.sleep(1)
 
-    assert("Secre3 Pruebas" not in driver.page_source), "Secre3 Pruebas no debe estar en el consultorio"
+    assert("Secre3 Pruebas" not in driver.page_source), " Secre3 Pruebas no debe estar en el consultorio"
 
     scroll("cphW_ucmicuentadoctor_ctl34_btnBuscar", driver)
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnBuscar").click()
