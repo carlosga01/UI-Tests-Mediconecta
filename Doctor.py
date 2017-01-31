@@ -190,6 +190,7 @@ def main(argv):
                     print "Proceso: AtenderPaciente en " + ambiente
                     AtenderPaciente(paciente, driver)
 
+                #Verificando las opciones de la secion de Historia Citas durante una cita
                 elif modulo == "HistoriaCitas":
 
                     p_driver = webdriver.Chrome()
@@ -213,6 +214,7 @@ def main(argv):
                     driver.quit()
                     p_driver.quit()
 
+                #Hace y attiende una cita llenando la opcion diagnostico
                 elif modulo == "Pruebas_de_Diagnostico":
                     p_driver = webdriver.Chrome()
 
@@ -238,6 +240,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
+                #Hace y attiende una cita llenando la opcion prescripciones
                 elif modulo == "Pruebas_de_Prescripciones":
                     p_driver = webdriver.Chrome()
 
@@ -263,6 +266,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
+                #Hace y attiende una cita llenando la opcion examenes
                 elif modulo == "Pruebas_de_Examenes":
                     p_driver = webdriver.Chrome()
 
@@ -288,6 +292,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
+                #Hace y attiende una cita llenando las opciones de Diagnostico, prescripciones, y examenes
                 elif modulo == "AtenderPacienteConDPE":
                     p_driver = webdriver.Chrome()
 
@@ -314,6 +319,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
+                #Doctor programa cita por un paciente existente
                 elif modulo == "ProgramarCitaGalen":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -324,6 +330,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Doctor programa cita por un menor de edad existente
                 elif modulo == "ProgramarCitaGalenMinor":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -334,6 +341,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Doctor programa cita por un nuevo menor de edad (registrandolo)
                 elif modulo == "ProgramarCitaGalenRegMinor":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -344,6 +352,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Doctor programa cita para un menor con registrando un paciente (mallor de edad) nuevo
                 elif modulo == "DoctorProgramarCitaMinorRegRep":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -354,6 +363,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Doctor programa cita para un contacto existente
                 elif modulo == "DoctorProgramarCitaPaciente":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -364,6 +374,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Verifica la funcionalidad del boton "Historial Reciente de Sala de Espera"
                 elif modulo == "AppHistoriasClientes":
                     p_driver = webdriver.Chrome()
 
@@ -407,6 +418,7 @@ def main(argv):
                     p_driver.quit()
                     driver.quit()
 
+                #Doctor programa cita y registra un paciente/mallor de edad
                 elif modulo == "ProgramarCitaGalenNuevoP":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -417,6 +429,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #registra nuevo dependiente si contacto no tiene dependiente, escoje dependiente si contacto si tiene dependientes
                 elif modulo == "DoctorProgramarCitaMinorCont":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -427,6 +440,7 @@ def main(argv):
                     print " Cita --> OK"
                     driver.quit
 
+                #Hace una cita, verifica los botones de editar y eliminar cita
                 elif modulo == "reAgendarCancelarCita":
                     print "Autenticando doctor: " + doctor
                     assert (log_in(doctor, password, driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -446,6 +460,7 @@ def main(argv):
 
                     driver.quit
 
+                #En mi accuenta, verifica los bottones en el tab "Datos del Consultorio"
                 elif modulo == "DatosdelConsultorio":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -455,6 +470,7 @@ def main(argv):
                     DatosdelConsultorio(driver)
                     print " Doctor Programar Cita --> OK"
 
+                #Registra, añade, elimina una secretaria, verifica los botones ediar y ver
                 elif modulo == "ManejoDeSecretarias":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -466,6 +482,7 @@ def main(argv):
 
                     driver.quit
 
+                #Añade y elimina una moneda, verifica el boton editar
                 elif modulo == "ManejoDeMonedas":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -477,6 +494,7 @@ def main(argv):
 
                     driver.quit
 
+                #Cambia las opciones en el boton configuraciones, asegura que cambia con screenshots
                 elif modulo == "ManejoDeConfiguraciones":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -488,6 +506,7 @@ def main(argv):
 
                     driver.quit
 
+                #Verifica que el app funciona como debe por buscando el telephono de Jenkins Chrome
                 elif modulo == "AppAtencionAlCliente":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -499,6 +518,8 @@ def main(argv):
 
                     driver.quit
 
+                #Assegura los dos tabs, primero verificando que los botones del primer tab cambian las imagines, y en
+                #el segundo tab verifica que todos las maneras para buscar cambian la lista
                 elif modulo == "AppLogEmails":
                     print "Autenticando doctor: " + doctor
                     assert (log_in("jenkins_drchrome@mediconecta.com", "dba123", driver, ambiente) == "exitoso"), "With correct login: Autenticacion fallida"
@@ -510,6 +531,7 @@ def main(argv):
 
                     driver.quit
 
+                #Añade, elimina, y busca un doctor, verifica que los botones de ver y editar sirven
                 elif modulo == 'ManejoDoctores':
 
                     print "Autenticando doctor: " + doctor
@@ -983,6 +1005,7 @@ def CitaODTokbox(driver, ambiente, atender):
             print " Cita no realizada2"
     '''
 
+#Verificando las opciones de la secion de Historia Citas durante una cita
 def historiaCitas(paciente, driver):
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
         print " Seleccionando Paciente en Fila"
@@ -1012,16 +1035,6 @@ def historiaCitas(paciente, driver):
     time.sleep(5)
     driver.save_screenshot("after.jpg")
 
-    #following is to compare the two screenshots, confirming change
-    '''
-    before = convert("before.jpg")
-    after =  convert("after.jpg")
-    baseline = c2d(before, before, mode="same")
-    compare = c2d(before, after, mode="same")
-    baseline_num = baseline.max()
-    new_num = compare.max()
-    '''
-
     before = Image.open('before.jpg')
     after = Image.open('after.jpg')
     if list(before.getdata()) == list(after.getdata()):
@@ -1037,6 +1050,7 @@ def historiaCitas(paciente, driver):
 
     time.sleep(2)
 
+#Attiende el paciente, llenando todos los datos necesario y añadiendo un diagnostico
 def Pruebas_de_Diagnostico(paciente, driver):
 
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
@@ -1160,6 +1174,7 @@ def Pruebas_de_Diagnostico(paciente, driver):
         else:
             print " Boton Continuar no encontrado"
 
+#Attiende el paciente, llenando todos los datos necesario y añadiendo una prescripcion
 def Pruebas_de_Prescripciones(paciente, driver):
 
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
@@ -1291,6 +1306,7 @@ def Pruebas_de_Prescripciones(paciente, driver):
         else:
             print " Boton Continuar no encontrado"
 
+#Attiende el paciente, llenando todos los datos necesario y añadiendo un Examen
 def Pruebas_de_Examenes(paciente, driver):
 
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
@@ -1409,6 +1425,7 @@ def Pruebas_de_Examenes(paciente, driver):
         else:
             print " Boton Continuar no encontrado"
 
+#añade un diagnostico (no attiende paciente)
 def Diagnostico(driver):
     if "cphW_ucSoap_ucAssesment_ctl00_btnCrear" in driver.page_source:
         print "Agregar Diagnosticos"
@@ -1438,6 +1455,7 @@ def Diagnostico(driver):
     else:
         print "No 'diagnostico' button found"
 
+#añade una prescripcion (no attiende paciente)
 def Prescripciones(driver):
     if "cphW_ucSoap_ucPlan_ctl00_btnCrear" in driver.page_source:
         print "Agregar Prescripciones"
@@ -1478,6 +1496,7 @@ def Prescripciones(driver):
     else:
         print "No 'Prescripciones' button found"
 
+#añade un examen (no attiende paciente)
 def Examenes(driver):
     if "cphW_ucSoap_ucPlan_ctl01_btnCrear" in driver.page_source:
         print "Agregar Examenes"
@@ -1499,6 +1518,7 @@ def Examenes(driver):
     else:
         print "No 'Examenes' button found"
 
+#usa los tres funciones (DPE) para attender paciente y añadir un diagnostico, prescripcion, y examen
 def AtenderPacienteConDPE(paciente, driver):
     if '<a onclick="AtenderPaciente(' and paciente in driver.page_source:
         print " Seleccionando Paciente en Fila"
@@ -1593,6 +1613,7 @@ def AtenderPacienteConDPE(paciente, driver):
         else:
             print " Boton Continuar no encontrado"
 
+#Doctor programa cita por un mallor de edad usando search
 def DoctorProgramarCita(driver):
     time.sleep(5)
     if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -1755,10 +1776,11 @@ def DoctorProgramarCita(driver):
         assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
         print "Cita made and confirmed"
 
+#Doctor programa cita y registra un paciente/mallor de edad
 def DoctorProgramarCitaNuevo(driver):
     numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    paciente = "Paciente" + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
-    paciente_apellido = "Smtih" + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
+    paciente = "Paciente" + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
+    paciente_apellido = "Smith" + random.choice(numbers) + random.choice(numbers) + random.choice(numbers)
 
     time.sleep(5)
     if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -1948,6 +1970,7 @@ def DoctorProgramarCitaNuevo(driver):
         assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
         print "Cita made and confirmed"
 
+#Doctor programa cita para un contacto existente
 def DoctorProgramarCitaPaciente(driver):
     time.sleep(5)
     if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -2105,6 +2128,7 @@ def DoctorProgramarCitaPaciente(driver):
         assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
         print "Cita made and confirmed"
 
+#Doctor programa cita para un menor de edad que es un contacto existente
 def DoctorProgramarCitaMinor(driver):
         time.sleep(5)
         if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -2294,6 +2318,7 @@ def DoctorProgramarCitaMinor(driver):
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
+#Doctor programa cita y registre un menor de edad
 def DoctorProgramarCitaRegMinor(driver):
         time.sleep(5)
         if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -2490,6 +2515,7 @@ def DoctorProgramarCitaRegMinor(driver):
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
+#Doctor programa cita y registre un paciente/mallor de edad
 def DoctorProgramarCitaMinorRegRep(driver):
         time.sleep(5)
         if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -2702,6 +2728,7 @@ def DoctorProgramarCitaMinorRegRep(driver):
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
+#registra nuevo dependiente si contacto no tiene dependiente, escoje dependiente si contacto si tiene dependientes
 def DoctorProgramarCitaMinorCont(driver):
         time.sleep(5)
         if 'CITAS PROGRAMADAS' in driver.page_source:
@@ -2747,7 +2774,7 @@ def DoctorProgramarCitaMinorCont(driver):
                 driver.find_element_by_id("cphW_uccitasprogramadasdr_ucBuscarPacientesCitaDoctor_rptTable_btnEscoger_0").click()
                 time.sleep(5)
             else:
-                print "no patient was found"
+                assert(False),"no patient was found"
 
             if "Nuevo Dependiente" in driver.page_source or "New Dependent" in driver.page_source:
                 print "registrando dependiente"
@@ -2885,6 +2912,7 @@ def DoctorProgramarCitaMinorCont(driver):
             assert (phrase in driver.page_source or also_phrase in driver.page_source), "cita no hecha"
             print "Cita made and confirmed"
 
+#(usado en un lugar especifico), toma un screenshot
 def screenshot(driver, file_name):
     assert ("cphW_ucPacientesEnFila_btnSolicitarCitaHub" in driver.page_source), "Not on right page"
     scroll("cphW_ucPacientesEnFila_btnSolicitarCitaHub", driver)
@@ -2894,6 +2922,7 @@ def screenshot(driver, file_name):
     time.sleep(1)
     driver.find_elements_by_tag_name("button")[-1].click()
 
+#usado con otras funciones, cambia el tiempo de una cita registrada
 def reAgendarCita(driver):
     time.sleep(3)
     assert 'Citas Programadas' in driver.title, 'Not in Cita Programadas'
@@ -2937,6 +2966,7 @@ def reAgendarCita(driver):
 
     assert '08:00 - 08:45' in  driver.page_source, 'Cita not changed'
 
+#usado con otras funcines, elimina un acita ya porgramada
 def cancelarCita(driver):
     time.sleep(3)
     assert 'Citas Programadas' in driver.title, 'Not in Cita Programadas'
@@ -2966,6 +2996,7 @@ def cancelarCita(driver):
 
     assert '08:00 - 08:45' not in driver.page_source
 
+#En mi accuenta, verifica los bottones en el tab "Datos del Consultorio"
 def DatosdelConsultorio(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
     time.sleep(1)
@@ -3003,6 +3034,7 @@ def DatosdelConsultorio(driver):
     assert(numero_de_telephono in driver.page_source), "No se guardo"
     time.sleep(1)
 
+#Registra, añade, elimina una secretaria, verifica los botones ediar y ver
 def ManejoDeSecretarias(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
     time.sleep(1)
@@ -3214,6 +3246,7 @@ def ManejoDeSecretarias(driver):
         driver.find_element_by_id("cphW_ucmicuentadoctor_ctl34_btnEliminarSecretaria").click()
         time.sleep(4)
 
+#Añade y elimina una moneda, verifica el boton editar
 def ManejoDeMonedas(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
     time.sleep(1)
@@ -3314,6 +3347,7 @@ def ManejoDeMonedas(driver):
     driver.find_element_by_id("cphW_ucmicuentadoctor_ctl32_ctl06_btnEliminarModal").click()
     time.sleep(4)
 
+#Cambia las opciones en el boton configuraciones, asegura que cambia con screenshots
 def ManejoDeConfiguraciones(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "wrapper-dropdown-5", " " ))]').click()
     time.sleep(1)
@@ -3396,6 +3430,7 @@ def ManejoDeConfiguraciones(driver):
     os.remove(mc_ver_after.jpg)
     '''
 
+#Verifica que el app funciona como debe por buscando el telephono de Jenkins Chrome
 def AppAtencionAlCliente(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-AtencionAlCliente", " " ))]').click()
     time.sleep(2)
@@ -3408,6 +3443,8 @@ def AppAtencionAlCliente(driver):
     print "Paciente Jenkins Chrome encontrado"
     time.sleep(5)
 
+#Assegura los dos tabs, primero verificando que los botones del primer tab cambian las imagines, y en
+#el segundo tab verifica que todos las maneras para buscar cambian la lista
 def AppLogEmails(driver):
     driver.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "icon-LogEmails", " " ))]').click()
     time.sleep(5)
@@ -3590,6 +3627,7 @@ def AppLogEmails(driver):
 
     time.sleep(4)
 
+#Añade, elimina, y busca un doctor, verifica que los botones de ver y editar sirven
 def manejoDoctores(driver):
     time.sleep(3)
 
